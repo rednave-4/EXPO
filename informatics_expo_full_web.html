@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;
+  --surface:#13131a;
+  --surface2:#1c1c28;
+  --accent:#7c3aed;
+  --accent2:#06b6d4;
+  --accent3:#f59e0b;
+  --text:#f0f0f8;
+  --text2:#a0a0b8;
+  --border:#2a2a3a;
+  --green:#10b981;
+  --red:#ef4444;
+}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+.page{display:none;min-height:100vh;animation:fadeIn .4s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px}
+.nav-logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:.25rem}
+.nav-btn{background:none;border:none;color:var(--text2);font-family:'Space Grotesk',sans-serif;font-size:.8rem;padding:.4rem .75rem;border-radius:6px;cursor:pointer;transition:all .2s}
+.nav-btn:hover,.nav-btn.active{color:var(--text);background:var(--surface2)}
+.nav-btn.active{color:var(--accent2)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.3}
+.hero-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,.15),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:.35rem 1rem;font-size:.75rem;color:var(--accent2);margin-bottom:2rem;position:relative}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;line-height:1.05;margin-bottom:1.5rem;position:relative}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1rem;color:var(--text2);max-width:520px;line-height:1.7;margin-bottom:2.5rem;position:relative}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;position:relative}
+.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.7rem 1.5rem;font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-primary:hover{background:#6d28d9;transform:translateY(-2px)}
+.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.7rem 1.5rem;font-family:'Space Grotesk',sans-serif;font-size:.9rem;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--accent2);color:var(--accent2)}
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;position:relative}
+.stat-item{text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent2)}
+.stat-label{font-size:.75rem;color:var(--text2);margin-top:.25rem}
+
+/* SECTIONS */
+.section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+.section-tag{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(6,182,212,.1);padding:.3rem .75rem;border-radius:999px;margin-bottom:1rem}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.1;margin-bottom:.75rem}
+.section-title span{color:var(--accent)}
+.section-sub{color:var(--text2);font-size:.95rem;line-height:1.7;max-width:500px;margin-bottom:3rem}
+
+/* MEMBERS */
+.member-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem}
+.member-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center;transition:all .3s;cursor:default}
+.member-card:hover{border-color:var(--accent);transform:translateY(-4px);background:var(--surface2)}
+.avatar{width:64px;height:64px;border-radius:50%;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800}
+.avatar.purple{background:rgba(124,58,237,.2);color:var(--accent)}
+.avatar.cyan{background:rgba(6,182,212,.2);color:var(--accent2)}
+.avatar.amber{background:rgba(245,158,11,.2);color:var(--accent3)}
+.avatar.green{background:rgba(16,185,129,.2);color:var(--green)}
+.member-name{font-weight:700;font-size:.95rem;margin-bottom:.25rem}
+.member-role{font-size:.75rem;color:var(--text2);background:var(--surface2);display:inline-block;padding:.2rem .6rem;border-radius:999px;margin-bottom:.5rem}
+.member-lead{font-size:.7rem;color:var(--accent3)}
+
+/* PROJECTS */
+.project-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.project-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s}
+.project-card:hover{border-color:var(--accent2);transform:translateY(-4px)}
+.project-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;overflow:hidden}
+.project-img.game-bg{background:linear-gradient(135deg,#1a0a2e,#0d1b35)}
+.project-img.arduino-bg{background:linear-gradient(135deg,#0a1f10,#0d2014)}
+.project-img.web-bg{background:linear-gradient(135deg,#1a1a0a,#1f1408)}
+.project-body{padding:1.25rem}
+.project-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:.5rem}
+.project-desc{font-size:.82rem;color:var(--text2);line-height:1.6;margin-bottom:1rem}
+.project-tags{display:flex;gap:.4rem;flex-wrap:wrap}
+.tag{font-size:.68rem;padding:.2rem .55rem;border-radius:999px;border:1px solid}
+.tag.purple{color:var(--accent);border-color:rgba(124,58,237,.3);background:rgba(124,58,237,.08)}
+.tag.cyan{color:var(--accent2);border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.08)}
+.tag.amber{color:var(--accent3);border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.08)}
+.project-btn{width:100%;margin-top:1rem;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.55rem;font-family:'Space Grotesk',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s}
+.project-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* GAME PAGE */
+.game-container{padding-top:56px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 1rem 2rem}
+.game-header{text-align:center;margin-bottom:2rem}
+.game-header h2{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;margin-bottom:.5rem}
+.game-meta{display:flex;gap:2rem;justify-content:center;margin-bottom:1.5rem}
+.game-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.6rem 1.25rem;text-align:center;min-width:100px}
+.game-stat-label{font-size:.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:.08em}
+.game-stat-val{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--accent2)}
+.game-stat-val.red{color:var(--red)}
+.game-stat-val.green{color:var(--green)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;max-width:420px;width:90%;text-align:center}
+.modal h3{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:1rem}
+.modal p{color:var(--text2);font-size:.9rem;line-height:1.6;margin-bottom:.5rem}
+.modal input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.9rem;margin:1rem 0;outline:none}
+.modal input:focus{border-color:var(--accent)}
+.level-btns{display:flex;gap:.6rem;justify-content:center;margin:1rem 0}
+.level-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:.5rem 1rem;font-family:'Space Grotesk',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s}
+.level-btn.selected{background:var(--accent);border-color:var(--accent);color:#fff}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text2);font-size:1.2rem;cursor:pointer}
+
+/* GAME BOARD */
+.game-board{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 auto;max-width:360px;width:100%}
+.hole{background:var(--surface);border:2px solid var(--border);border-radius:16px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:2.5rem;cursor:pointer;transition:all .15s;user-select:none;position:relative;overflow:hidden}
+.hole:hover{border-color:var(--accent2)}
+.hole.active{border-color:var(--accent3);background:rgba(245,158,11,.1);animation:pop .15s ease}
+.hole.hit{border-color:var(--green);background:rgba(16,185,129,.15);animation:hit .3s ease}
+.hole.miss{border-color:var(--red);background:rgba(239,68,68,.1)}
+@keyframes pop{0%{transform:scale(.8)}100%{transform:scale(1)}}
+@keyframes hit{0%{transform:scale(1.15)}100%{transform:scale(1)}}
+.mole{transition:all .2s;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.progress-bar{width:100%;max-width:360px;height:6px;background:var(--surface2);border-radius:999px;margin:1.5rem 0;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width .1s linear}
+.game-controls{display:flex;gap:.75rem;margin-top:1rem}
+
+/* RANK PAGE */
+.rank-container{padding-top:56px;min-height:100vh;padding:80px 2rem 2rem;max-width:600px;margin:0 auto}
+.rank-container h2{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;margin-bottom:.5rem;text-align:center}
+.rank-sub{color:var(--text2);text-align:center;font-size:.85rem;margin-bottom:2rem}
+.rank-list{display:flex;flex-direction:column;gap:.6rem}
+.rank-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.25rem;display:flex;align-items:center;gap:1rem;transition:all .2s}
+.rank-item:hover{border-color:var(--border);background:var(--surface2)}
+.rank-item.gold{border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.05)}
+.rank-item.silver{border-color:rgba(160,160,184,.3)}
+.rank-item.bronze{border-color:rgba(245,158,11,.2)}
+.rank-num{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;min-width:28px;text-align:center}
+.rank-num.gold{color:var(--accent3)}
+.rank-num.silver{color:#a0a0b8}
+.rank-num.bronze{color:#cd7f32}
+.rank-info{flex:1}
+.rank-name{font-weight:600;font-size:.9rem}
+.rank-level{font-size:.7rem;color:var(--text2)}
+.rank-score{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--accent2)}
+.rank-empty{text-align:center;color:var(--text2);padding:3rem;font-size:.9rem}
+
+/* RULES */
+.rules-modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1.5rem;max-width:380px;width:90%}
+.rules-modal h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:1rem;color:var(--accent2)}
+.rule-item{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:.75rem;font-size:.85rem;color:var(--text2);line-height:1.5}
+.rule-num{min-width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.about-text h2{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;margin-bottom:1rem}
+.about-text p{color:var(--text2);font-size:.9rem;line-height:1.8;margin-bottom:1rem}
+.about-visual{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;text-align:center}
+.expo-icon{font-size:5rem;margin-bottom:1rem}
+.tech-tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.tech-tag{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.3rem .7rem;font-size:.75rem;color:var(--text2)}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:0 2rem}
+
+/* FOOTER */
+footer{text-align:center;padding:2rem;color:var(--text2);font-size:.8rem;border-top:1px solid var(--border)}
+footer span{color:var(--accent2)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:999px}
+
+@media(max-width:600px){
+  .about-grid{grid-template-columns:1fr}
+  .hero-stats{gap:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">INFEX '26</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home',this)">Home</button>
+    <button class="nav-btn" onclick="showPage('about',this)">About</button>
+    <button class="nav-btn" onclick="showPage('member',this)">Member</button>
+    <button class="nav-btn" onclick="showPage('project',this)">Project</button>
+    <button class="nav-btn" onclick="showPage('game',this)">Game</button>
+    <button class="nav-btn" onclick="showPage('rank',this)">Rank</button>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-badge"><span class="badge-dot"></span>Informatics Expo 2026 — Live Now</div>
+    <h1>We Build.<br><span>We Innovate.</span><br>We Expo.</h1>
+    <p>Dokumentasi kreatif kolaborasi tim kami dalam dunia informatika — dari Arduino interaktif, 3D Printing, hingga web modern.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('project',document.querySelectorAll('.nav-btn')[3])">Lihat Project</button>
+      <button class="btn-secondary" onclick="showPage('game',document.querySelectorAll('.nav-btn')[4])">Main Game</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num" id="member-count">—</div><div class="stat-label">Anggota Tim</div></div>
+      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Sub-Tim</div></div>
+      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Project Utama</div></div>
+    </div>
+  </section>
+  <footer>Made with ❤ by <span>Web Designer Team</span> · Informatics Expo 2026</footer>
+</div>
+
+<!-- ABOUT PAGE -->
+<div id="page-about" class="page">
+  <div class="section">
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="section-tag">Tentang Kami</div>
+        <h2>Informatics<br><span style="color:var(--accent)">Expo</span> 2026</h2>
+        <p>Website ini adalah dokumentasi kreatif dari kolaborasi tim kami dalam mengeksplorasi dunia informatika. Dari rancangan 3D Printing yang presisi, sistem Arduino yang interaktif, hingga desain web modern.</p>
+        <p>Kami menyatukan berbagai keahlian teknologi dalam satu visi. Jelajahi karya kami dan temukan bagaimana setiap elemen teknis bersatu dalam pameran ini.</p>
+        <p style="color:var(--accent2);font-size:.85rem;font-weight:600">📍 Informatics Expo · 2026</p>
+      </div>
+      <div class="about-visual">
+        <div class="expo-icon">⚡</div>
+        <p style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:1rem">Teknologi yang Kami Pakai</p>
+        <div class="tech-tags">
+          <span class="tech-tag">Arduino</span>
+          <span class="tech-tag">3D Printing</span>
+          <span class="tech-tag">HTML/CSS/JS</span>
+          <span class="tech-tag">C++</span>
+          <span class="tech-tag">Sensor</span>
+          <span class="tech-tag">Whack-a-Mole</span>
+          <span class="tech-tag">PCB Design</span>
+          <span class="tech-tag">Web Dev</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBER PAGE -->
+<div id="page-member" class="page">
+  <div class="section">
+    <div class="section-tag">Tim Kami</div>
+    <div class="section-title">Meet the <span>Team</span></div>
+    <p class="section-sub">Tim kami terdiri dari tiga divisi yang saling melengkapi untuk menciptakan karya terbaik di Informatics Expo 2026.</p>
+
+    <p style="font-size:.75rem;color:var(--accent2);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:1rem">🌐 Web Designer Team</p>
+    <div class="member-grid" id="web-team"></div>
+
+    <p style="font-size:.75rem;color:var(--accent3);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin:2.5rem 0 1rem">⚡ Arduino & 3D Print Team</p>
+    <div class="member-grid" id="arduino-team"></div>
+
+    <p style="font-size:.75rem;color:var(--green);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin:2.5rem 0 1rem">🎨 Decoration Team</p>
+    <div class="member-grid" id="deco-team"></div>
+  </div>
+</div>
+
+<!-- PROJECT PAGE -->
+<div id="page-project" class="page">
+  <div class="section">
+    <div class="section-tag">Our Project</div>
+    <div class="section-title">Karya <span>Kami</span></div>
+    <p class="section-sub">Tiga project utama yang kami kembangkan bersama dalam Informatics Expo 2026.</p>
+    <div class="project-grid">
+      <div class="project-card">
+        <div class="project-img game-bg">🎯</div>
+        <div class="project-body">
+          <div class="project-title">Whack-a-Mole Game</div>
+          <div class="project-desc">Game interaktif berbasis web dengan sistem level (Early/Mid/Late), timer, poin, dan global leaderboard top 10. Dibuat murni dengan HTML, CSS, dan JavaScript.</div>
+          <div class="project-tags">
+            <span class="tag purple">HTML/CSS/JS</span>
+            <span class="tag cyan">Interactive</span>
+            <span class="tag amber">Leaderboard</span>
+          </div>
+          <button class="project-btn" onclick="showPage('game',document.querySelectorAll('.nav-btn')[4])">Main Sekarang →</button>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-img arduino-bg">🤖</div>
+        <div class="project-body">
+          <div class="project-title">Arduino Bomb System</div>
+          <div class="project-desc">Sistem Arduino interaktif dengan dua tipe tampilan: visual langsung (Tipe A) dan transformasi visual (Tipe B). Mode Early, Mid, dan Late dengan tingkat kesulitan berbeda.</div>
+          <div class="project-tags">
+            <span class="tag amber">Arduino</span>
+            <span class="tag purple">C++</span>
+            <span class="tag cyan">Sensor</span>
+          </div>
+          <button class="project-btn">Lihat Detail →</button>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-img web-bg">🌐</div>
+        <div class="project-body">
+          <div class="project-title">Portfolio Website</div>
+          <div class="project-desc">Website dokumentasi Informatics Expo yang kamu lihat sekarang. Dibangun oleh Web Designer Team dengan desain modern, animasi halus, dan tema dark futuristik.</div>
+          <div class="project-tags">
+            <span class="tag purple">HTML/CSS</span>
+            <span class="tag cyan">JavaScript</span>
+            <span class="tag amber">UI Design</span>
+          </div>
+          <button class="project-btn">Ini dia! 😎</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME PAGE -->
+<div id="page-game" class="page">
+  <div class="game-container">
+    <div class="game-header">
+      <div class="section-tag">Mini Game</div>
+      <h2>🎯 Whack-a-Mole</h2>
+    </div>
+    <div class="game-meta">
+      <div class="game-stat"><div class="game-stat-label">Pemain</div><div class="game-stat-val" id="g-player" style="font-size:.9rem;color:var(--text)">—</div></div>
+      <div class="game-stat"><div class="game-stat-label">Poin</div><div class="game-stat-val green" id="g-score">0</div></div>
+      <div class="game-stat"><div class="game-stat-label">Waktu</div><div class="game-stat-val red" id="g-timer">30</div></div>
+      <div class="game-stat"><div class="game-stat-label">Level</div><div class="game-stat-val" id="g-level" style="font-size:.9rem">—</div></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="g-progress" style="width:100%"></div></div>
+    <div class="game-board" id="game-board"></div>
+    <div class="game-controls" style="margin-top:1.25rem">
+      <button class="btn-primary" onclick="openStartModal()">Mulai Game</button>
+      <button class="btn-secondary" onclick="openRulesModal()">Aturan</button>
+      <button class="btn-secondary" onclick="showPage('rank',document.querySelectorAll('.nav-btn')[5])">Lihat Rank</button>
+    </div>
+  </div>
+</div>
+
+<!-- RANK PAGE -->
+<div id="page-rank" class="page">
+  <div class="rank-container">
+    <div class="section-tag" style="display:block;text-align:center;margin:0 auto 1rem">Leaderboard</div>
+    <h2>🏆 Global Rank</h2>
+    <p class="rank-sub">Top 10 pemain terbaik</p>
+    <div class="rank-list" id="rank-list"></div>
+    <div style="text-align:center;margin-top:2rem">
+      <button class="btn-secondary" onclick="showPage('game',document.querySelectorAll('.nav-btn')[4])">Main Lagi</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="start-modal" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <h3>🎯 Mulai Game</h3>
+    <p>Masukkan namamu dan pilih level kesulitan.</p>
+    <input type="text" id="player-name-input" placeholder="Nama kamu..." maxlength="20">
+    <p style="font-size:.8rem;margin-bottom:.5rem">Pilih Level:</p>
+    <div class="level-btns">
+      <button class="level-btn selected" onclick="selectLevel(this,'early')">Early<br><span style="font-size:.65rem;color:inherit;opacity:.7">30s · 60 mole</span></button>
+      <button class="level-btn" onclick="selectLevel(this,'mid')">Mid<br><span style="font-size:.65rem;color:inherit;opacity:.7">60s · 90 mole</span></button>
+      <button class="level-btn" onclick="selectLevel(this,'late')">Late<br><span style="font-size:.65rem;color:inherit;opacity:.7">80s · 120 mole</span></button>
+    </div>
+    <div style="display:flex;gap:.6rem;margin-top:1rem">
+      <button class="btn-primary" style="flex:1" onclick="startGame()">Mulai!</button>
+      <button class="btn-secondary" onclick="document.getElementById('start-modal').style.display='none'">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div id="rules-modal" class="modal-overlay" style="display:none">
+  <div class="rules-modal">
+    <button style="float:right;background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.1rem" onclick="document.getElementById('rules-modal').style.display='none'">✕</button>
+    <h3>📋 Aturan Main</h3>
+    <div class="rule-item"><div class="rule-num">1</div><span>Klik mole (🐹) yang muncul di lubang untuk dapat poin</span></div>
+    <div class="rule-item"><div class="rule-num">2</div><span>Setiap klik mole yang benar = +2 poin</span></div>
+    <div class="rule-item"><div class="rule-num">3</div><span>Early: 30 detik · Mid: 60 detik · Late: 80 detik</span></div>
+    <div class="rule-item"><div class="rule-num">4</div><span>Game selesai saat waktu habis, langsung ke halaman Rank</span></div>
+    <div class="rule-item"><div class="rule-num">5</div><span>Hanya top 10 skor tertinggi yang tersimpan di leaderboard</span></div>
+    <button class="btn-primary" style="width:100%;margin-top:1rem" onclick="document.getElementById('rules-modal').style.display='none'">Mengerti!</button>
+  </div>
+</div>
+
+<div id="done-modal" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <h3>🎉 Game Selesai!</h3>
+    <p id="done-player-name" style="font-weight:700;color:var(--accent2);font-size:1.1rem;margin:.5rem 0"></p>
+    <p>Skor kamu:</p>
+    <div style="font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--accent3);margin:1rem 0" id="done-score">0</div>
+    <p id="done-rank-msg" style="color:var(--text2);font-size:.85rem;margin-bottom:1.5rem"></p>
+    <div style="display:flex;gap:.6rem">
+      <button class="btn-primary" style="flex:1" onclick="openStartModal();document.getElementById('done-modal').style.display='none'">Main Lagi</button>
+      <button class="btn-secondary" style="flex:1" onclick="document.getElementById('done-modal').style.display='none';showPage('rank',document.querySelectorAll(\'.nav-btn\')[5])">Lihat Rank</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// DATA ANGGOTA (isi sesuai tim kamu!)
+const members = {
+  web: [
+    {name:"Nama Ketua",role:"Ketua",div:"Web",letter:"K",color:"purple",lead:true},
+    {name:"Member Web 1",role:"Web Designer",div:"Web",letter:"W",color:"cyan"},
+    {name:"Member Web 2",role:"Web Designer",div:"Web",letter:"W",color:"cyan"},
+  ],
+  arduino: [
+    {name:"Member Arduino 1",role:"Arduino Dev",div:"Arduino",letter:"A",color:"amber"},
+    {name:"Member Arduino 2",role:"Arduino Dev",div:"Arduino",letter:"A",color:"amber"},
+    {name:"Member 3D Print",role:"3D Print",div:"Arduino",letter:"P",color:"amber"},
+  ],
+  deco: [
+    {name:"Member Deco 1",role:"Decoration",div:"Deco",letter:"D",color:"green"},
+    {name:"Member Deco 2",role:"Decoration",div:"Deco",letter:"D",color:"green"},
+  ]
+};
+
+function renderMembers(){
+  document.getElementById('member-count').textContent = members.web.length + members.arduino.length + members.deco.length;
+  const renderTeam = (arr,elId) => {
+    document.getElementById(elId).innerHTML = arr.map(m=>`
+      <div class="member-card">
+        <div class="avatar ${m.color}">${m.letter}</div>
+        <div class="member-name">${m.name}</div>
+        <div class="member-role">${m.role}</div>
+        ${m.lead?'<div class="member-lead">⭐ Ketua Tim</div>':''}
+      </div>`).join('');
+  };
+  renderTeam(members.web,'web-team');
+  renderTeam(members.arduino,'arduino-team');
+  renderTeam(members.deco,'deco-team');
+}
+renderMembers();
+
+// NAVIGATION
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='rank') renderRank();
+}
+
+// GAME LOGIC
+let gameState = {running:false,score:0,timer:0,interval:null,moleInterval:null,level:'early',playerName:'',maxTime:30};
+let selectedLevel = 'early';
+const levelConfig = {early:{time:30,speed:900},mid:{time:60,speed:700},late:{time:80,speed:550}};
+
+const board = document.getElementById('game-board');
+for(let i=0;i<9;i++){
+  const h = document.createElement('div');
+  h.className = 'hole';
+  h.dataset.idx = i;
+  h.innerHTML = '<div class="mole"></div>';
+  h.addEventListener('click',()=>whack(i));
+  board.appendChild(h);
+}
+const holes = ()=>document.querySelectorAll('.hole');
+
+function openStartModal(){
+  if(gameState.running) stopGame();
+  document.getElementById('start-modal').style.display='flex';
+}
+function openRulesModal(){document.getElementById('rules-modal').style.display='flex';}
+function selectLevel(el,lvl){
+  document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedLevel=lvl;
+}
+
+function startGame(){
+  const name = document.getElementById('player-name-input').value.trim();
+  if(!name){document.getElementById('player-name-input').focus();return;}
+  document.getElementById('start-modal').style.display='none';
+  stopGame();
+  const cfg = levelConfig[selectedLevel];
+  gameState = {running:true,score:0,timer:cfg.time,level:selectedLevel,playerName:name,maxTime:cfg.time,interval:null,moleInterval:null};
+  document.getElementById('g-player').textContent = name;
+  document.getElementById('g-score').textContent = 0;
+  document.getElementById('g-level').textContent = selectedLevel.charAt(0).toUpperCase()+selectedLevel.slice(1);
+  updateTimer();
+  gameState.interval = setInterval(()=>{
+    gameState.timer--;
+    updateTimer();
+    if(gameState.timer<=0) endGame();
+  },1000);
+  gameState.moleInterval = setInterval(showMole, cfg.speed);
+}
+
+function updateTimer(){
+  document.getElementById('g-timer').textContent = gameState.timer;
+  const pct = (gameState.timer/gameState.maxTime)*100;
+  document.getElementById('g-progress').style.width = pct+'%';
+  document.getElementById('g-progress').style.background = pct>50?'linear-gradient(90deg,var(--accent),var(--accent2))':pct>20?'linear-gradient(90deg,var(--accent3),var(--red))':'var(--red)';
+}
+
+let currentMole = -1;
+function showMole(){
+  holes().forEach(h=>{h.classList.remove('active');h.querySelector('.mole').textContent='';});
+  currentMole = Math.floor(Math.random()*9);
+  const h = board.children[currentMole];
+  h.classList.add('active');
+  h.querySelector('.mole').textContent = '🐹';
+}
+
+function whack(idx){
+  if(!gameState.running) return;
+  const h = board.children[idx];
+  if(idx===currentMole && h.classList.contains('active')){
+    gameState.score += 2;
+    document.getElementById('g-score').textContent = gameState.score;
+    h.classList.remove('active');
+    h.classList.add('hit');
+    h.querySelector('.mole').textContent = '💥';
+    currentMole = -1;
+    setTimeout(()=>{h.classList.remove('hit');h.querySelector('.mole').textContent='';},300);
+  }
+}
+
+function stopGame(){
+  clearInterval(gameState.interval);
+  clearInterval(gameState.moleInterval);
+  holes().forEach(h=>{h.classList.remove('active','hit','miss');h.querySelector('.mole').textContent='';});
+  gameState.running=false;
+  currentMole=-1;
+}
+
+function endGame(){
+  stopGame();
+  const sc = gameState.score;
+  const nm = gameState.playerName;
+  const lv = gameState.level;
+  saveScore(nm,sc,lv);
+  document.getElementById('done-player-name').textContent = nm;
+  document.getElementById('done-score').textContent = sc;
+  const rank = getRank(nm,sc);
+  document.getElementById('done-rank-msg').textContent = rank <= 10 ? `Kamu masuk Top ${rank}! 🎉` : 'Skor kamu belum masuk top 10, coba lagi!';
+  document.getElementById('done-modal').style.display='flex';
+}
+
+// LEADERBOARD
+function getScores(){try{return JSON.parse(localStorage.getItem('infex_scores')||'[]')}catch{return[]}}
+function saveScore(name,score,level){
+  let scores = getScores();
+  scores.push({name,score,level,date:new Date().toLocaleDateString('id-ID')});
+  scores.sort((a,b)=>b.score-a.score);
+  scores = scores.slice(0,10);
+  try{localStorage.setItem('infex_scores',JSON.stringify(scores))}catch{}
+}
+function getRank(name,score){
+  const scores = getScores();
+  const idx = scores.findIndex(s=>s.name===name&&s.score===score);
+  return idx===-1?99:idx+1;
+}
+
+function renderRank(){
+  const scores = getScores();
+  const medals = ['gold','silver','bronze'];
+  const medalIcon = ['🥇','🥈','🥉'];
+  const rl = document.getElementById('rank-list');
+  if(!scores.length){
+    rl.innerHTML = '<div class="rank-empty">Belum ada skor. Jadilah yang pertama! 🎮</div>';
+    return;
+  }
+  rl.innerHTML = scores.map((s,i)=>`
+    <div class="rank-item ${medals[i]||''}">
+      <div class="rank-num ${medals[i]||''}">${i<3?medalIcon[i]:i+1}</div>
+      <div class="rank-info">
+        <div class="rank-name">${s.name}</div>
+        <div class="rank-level">${s.level} · ${s.date}</div>
+      </div>
+      <div class="rank-score">${s.score}</div>
+    </div>`).join('');
+}
+renderRank();
+</script>
+</body>
+</html>
