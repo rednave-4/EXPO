@@ -3,576 +3,788 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<title>Smaridasa Informatics Expo 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0a0a0f;
-  --surface:#13131a;
-  --surface2:#1c1c28;
-  --accent:#7c3aed;
-  --accent2:#06b6d4;
-  --accent3:#f59e0b;
-  --text:#f0f0f8;
-  --text2:#a0a0b8;
-  --border:#2a2a3a;
-  --green:#10b981;
-  --red:#ef4444;
+  --bg:#07070f;--surface:#0f0f1a;--surface2:#181828;--surface3:#20203a;
+  --accent:#7c3aed;--accent2:#22d3ee;--accent3:#f59e0b;
+  --green:#10b981;--red:#f43f5e;--pink:#ec4899;
+  --text:#eeeef8;--text2:#9090b0;--border:#252540;
+  --grad:linear-gradient(135deg,var(--accent),var(--accent2));
 }
-body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
-.page{display:none;min-height:100vh;animation:fadeIn .4s ease}
-.page.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;min-height:100vh}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px}
-.nav-logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;gap:.25rem}
-.nav-btn{background:none;border:none;color:var(--text2);font-family:'Space Grotesk',sans-serif;font-size:.8rem;padding:.4rem .75rem;border-radius:6px;cursor:pointer;transition:all .2s}
-.nav-btn:hover,.nav-btn.active{color:var(--text);background:var(--surface2)}
-.nav-btn.active{color:var(--accent2)}
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:999;height:58px;
+  background:rgba(7,7,15,.88);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem}
+.nav-logo{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2px}
+.nav-btn{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;
+  font-size:.8rem;font-weight:500;padding:.4rem .7rem;border-radius:7px;cursor:pointer;transition:all .2s}
+.nav-btn:hover{color:var(--text);background:var(--surface2)}
+.nav-btn.active{color:var(--accent2);background:rgba(34,211,238,.08)}
 
-/* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;position:relative;overflow:hidden}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.3}
-.hero-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,.15),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
-.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:.35rem 1rem;font-size:.75rem;color:var(--accent2);margin-bottom:2rem;position:relative}
-.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;line-height:1.05;margin-bottom:1.5rem;position:relative}
-.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:1rem;color:var(--text2);max-width:520px;line-height:1.7;margin-bottom:2.5rem;position:relative}
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;position:relative}
-.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.7rem 1.5rem;font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .2s}
-.btn-primary:hover{background:#6d28d9;transform:translateY(-2px)}
-.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.7rem 1.5rem;font-family:'Space Grotesk',sans-serif;font-size:.9rem;cursor:pointer;transition:all .2s}
-.btn-secondary:hover{border-color:var(--accent2);color:var(--accent2)}
-.hero-stats{display:flex;gap:3rem;margin-top:4rem;position:relative}
-.stat-item{text-align:center}
-.stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent2)}
-.stat-label{font-size:.75rem;color:var(--text2);margin-top:.25rem}
+/* ─── PAGES ─── */
+.page{display:none;padding-top:58px;min-height:100vh}
+.page.active{display:block;animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-/* SECTIONS */
-.section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
-.section-tag{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(6,182,212,.1);padding:.3rem .75rem;border-radius:999px;margin-bottom:1rem}
-.section-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.1;margin-bottom:.75rem}
-.section-title span{color:var(--accent)}
-.section-sub{color:var(--text2);font-size:.95rem;line-height:1.7;max-width:500px;margin-bottom:3rem}
+/* ─── HERO ─── */
+.hero{min-height:calc(100vh - 58px);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:4rem 1.5rem;position:relative;overflow:hidden}
+.hero-dots{position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:32px 32px}
+.hero-orb{position:absolute;width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.12) 0%,transparent 65%);
+  top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.hero-orb2{position:absolute;width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(34,211,238,.07) 0%,transparent 65%);
+  top:20%;right:10%;pointer-events:none}
+.live-badge{position:relative;display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);
+  border-radius:999px;padding:.3rem .9rem;font-size:.72rem;color:var(--green);
+  font-weight:600;letter-spacing:.04em;margin-bottom:1.75rem}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,.4)}50%{opacity:.5;box-shadow:0 0 0 4px rgba(16,185,129,0)}}
+.hero h1{position:relative;font-family:'Syne',sans-serif;font-size:clamp(2.8rem,7vw,5rem);
+  font-weight:800;line-height:1.02;margin-bottom:1.25rem}
+.hero h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{position:relative;color:var(--text2);font-size:1rem;max-width:480px;line-height:1.75;margin-bottom:2.5rem}
+.hero-btns{position:relative;display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-bottom:4rem}
+.btn-glow{background:var(--accent);color:#fff;border:none;border-radius:10px;
+  padding:.7rem 1.6rem;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;
+  cursor:pointer;transition:all .25s;box-shadow:0 0 24px rgba(124,58,237,.35)}
+.btn-glow:hover{background:#6d28d9;transform:translateY(-2px);box-shadow:0 4px 32px rgba(124,58,237,.5)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);
+  border-radius:10px;padding:.7rem 1.6rem;font-family:'DM Sans',sans-serif;
+  font-size:.9rem;font-weight:500;cursor:pointer;transition:all .25s}
+.btn-outline:hover{border-color:var(--accent2);color:var(--accent2);transform:translateY(-2px)}
+.hero-stats{position:relative;display:flex;gap:2.5rem;flex-wrap:wrap;justify-content:center}
+.stat{text-align:center}
+.stat-n{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-l{font-size:.72rem;color:var(--text2);font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-top:.2rem}
 
-/* MEMBERS */
-.member-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem}
-.member-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center;transition:all .3s;cursor:default}
-.member-card:hover{border-color:var(--accent);transform:translateY(-4px);background:var(--surface2)}
-.avatar{width:64px;height:64px;border-radius:50%;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800}
-.avatar.purple{background:rgba(124,58,237,.2);color:var(--accent)}
-.avatar.cyan{background:rgba(6,182,212,.2);color:var(--accent2)}
-.avatar.amber{background:rgba(245,158,11,.2);color:var(--accent3)}
-.avatar.green{background:rgba(16,185,129,.2);color:var(--green)}
-.member-name{font-weight:700;font-size:.95rem;margin-bottom:.25rem}
-.member-role{font-size:.75rem;color:var(--text2);background:var(--surface2);display:inline-block;padding:.2rem .6rem;border-radius:999px;margin-bottom:.5rem}
-.member-lead{font-size:.7rem;color:var(--accent3)}
+/* ─── SECTION WRAPPER ─── */
+.wrap{max-width:1100px;margin:0 auto;padding:5rem 1.5rem}
+.sec-tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent2);background:rgba(34,211,238,.08);
+  border:1px solid rgba(34,211,238,.2);padding:.28rem .75rem;border-radius:999px;margin-bottom:.9rem}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,4vw,3rem);
+  font-weight:800;line-height:1.08;margin-bottom:.6rem}
+.sec-title em{font-style:normal;color:var(--accent)}
+.sec-sub{color:var(--text2);font-size:.92rem;line-height:1.75;max-width:480px;margin-bottom:3rem}
 
-/* PROJECTS */
-.project-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
-.project-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s}
-.project-card:hover{border-color:var(--accent2);transform:translateY(-4px)}
-.project-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;overflow:hidden}
-.project-img.game-bg{background:linear-gradient(135deg,#1a0a2e,#0d1b35)}
-.project-img.arduino-bg{background:linear-gradient(135deg,#0a1f10,#0d2014)}
-.project-img.web-bg{background:linear-gradient(135deg,#1a1a0a,#1f1408)}
-.project-body{padding:1.25rem}
-.project-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:.5rem}
-.project-desc{font-size:.82rem;color:var(--text2);line-height:1.6;margin-bottom:1rem}
-.project-tags{display:flex;gap:.4rem;flex-wrap:wrap}
-.tag{font-size:.68rem;padding:.2rem .55rem;border-radius:999px;border:1px solid}
-.tag.purple{color:var(--accent);border-color:rgba(124,58,237,.3);background:rgba(124,58,237,.08)}
-.tag.cyan{color:var(--accent2);border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.08)}
-.tag.amber{color:var(--accent3);border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.08)}
-.project-btn{width:100%;margin-top:1rem;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.55rem;font-family:'Space Grotesk',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s}
-.project-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+/* ─── ABOUT ─── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.about-text p{color:var(--text2);font-size:.92rem;line-height:1.8;margin-bottom:.9rem}
+.maps-link{display:inline-flex;align-items:center;gap:.4rem;color:var(--accent2);
+  font-size:.82rem;font-weight:600;text-decoration:none;
+  background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);
+  border-radius:8px;padding:.4rem .85rem;margin-top:.25rem;transition:all .2s}
+.maps-link:hover{background:rgba(34,211,238,.15);transform:translateY(-1px)}
+.about-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;text-align:center}
+.about-icon{font-size:4rem;margin-bottom:1rem}
+.about-card-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:1.25rem}
+.tech-wrap{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.tech-chip{background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:.28rem .65rem;font-size:.72rem;color:var(--text2);font-weight:500}
+@media(max-width:680px){.about-grid{grid-template-columns:1fr}}
 
-/* GAME PAGE */
-.game-container{padding-top:56px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 1rem 2rem}
-.game-header{text-align:center;margin-bottom:2rem}
-.game-header h2{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;margin-bottom:.5rem}
-.game-meta{display:flex;gap:2rem;justify-content:center;margin-bottom:1.5rem}
-.game-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.6rem 1.25rem;text-align:center;min-width:100px}
-.game-stat-label{font-size:.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:.08em}
-.game-stat-val{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--accent2)}
-.game-stat-val.red{color:var(--red)}
-.game-stat-val.green{color:var(--green)}
+/* ─── MEMBER ─── */
+.member-section{margin-bottom:3rem}
+.member-section-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text2);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.member-section-label::before,.member-section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem}
+.member-grid.center-1{grid-template-columns:1fr;max-width:200px;margin:0 auto}
+.member-grid.center-2{grid-template-columns:repeat(2,1fr);max-width:420px;margin:0 auto}
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;max-width:420px;width:90%;text-align:center}
-.modal h3{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:1rem}
-.modal p{color:var(--text2);font-size:.9rem;line-height:1.6;margin-bottom:.5rem}
-.modal input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.9rem;margin:1rem 0;outline:none}
-.modal input:focus{border-color:var(--accent)}
-.level-btns{display:flex;gap:.6rem;justify-content:center;margin:1rem 0}
-.level-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:.5rem 1rem;font-family:'Space Grotesk',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s}
-.level-btn.selected{background:var(--accent);border-color:var(--accent);color:#fff}
-.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text2);font-size:1.2rem;cursor:pointer}
+/* FLIP CARD */
+.flip-card{perspective:900px;height:220px;cursor:pointer}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+.flip-card:hover .flip-inner,.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:16px;border:1px solid var(--border);background:var(--surface);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;text-align:center;overflow:hidden}
+.flip-back{transform:rotateY(180deg);background:var(--surface2);border-color:rgba(124,58,237,.3);justify-content:flex-start;padding-top:1.25rem}
+.member-photo{width:68px;height:68px;border-radius:50%;object-fit:cover;
+  border:2px solid var(--accent);margin-bottom:.6rem;background:var(--surface3)}
+.member-avatar{width:68px;height:68px;border-radius:50%;margin-bottom:.6rem;
+  display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;
+  font-size:1.5rem;font-weight:800;border:2px solid}
+.av-purple{background:rgba(124,58,237,.15);color:var(--accent);border-color:rgba(124,58,237,.4)}
+.av-cyan{background:rgba(34,211,238,.1);color:var(--accent2);border-color:rgba(34,211,238,.3)}
+.av-amber{background:rgba(245,158,11,.1);color:var(--accent3);border-color:rgba(245,158,11,.3)}
+.av-green{background:rgba(16,185,129,.1);color:var(--green);border-color:rgba(16,185,129,.3)}
+.av-pink{background:rgba(236,72,153,.1);color:var(--pink);border-color:rgba(236,72,153,.3)}
+.member-name-f{font-weight:700;font-size:.82rem;line-height:1.3;margin-bottom:.25rem}
+.member-motto{font-size:.68rem;color:var(--text2);font-style:italic;line-height:1.4;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.member-role-badge{font-size:.62rem;font-weight:700;padding:.18rem .5rem;border-radius:999px;margin-top:.35rem}
+.rb-pj{background:rgba(245,158,11,.15);color:var(--accent3);border:1px solid rgba(245,158,11,.3)}
+.rb-ketua{background:rgba(124,58,237,.15);color:var(--accent);border:1px solid rgba(124,58,237,.3)}
+.rb-member{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border)}
+.back-name{font-weight:700;font-size:.82rem;margin-bottom:.75rem;color:var(--accent2)}
+.back-row{display:flex;align-items:flex-start;gap:.4rem;margin-bottom:.4rem;width:100%;text-align:left}
+.back-label{font-size:.6rem;color:var(--text2);font-weight:600;min-width:36px;text-transform:uppercase;letter-spacing:.05em;padding-top:1px}
+.back-val{font-size:.68rem;color:var(--text);line-height:1.4;word-break:break-word}
+.back-emoji{font-size:1.8rem;margin-top:.6rem}
 
-/* GAME BOARD */
-.game-board{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 auto;max-width:360px;width:100%}
-.hole{background:var(--surface);border:2px solid var(--border);border-radius:16px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:2.5rem;cursor:pointer;transition:all .15s;user-select:none;position:relative;overflow:hidden}
-.hole:hover{border-color:var(--accent2)}
-.hole.active{border-color:var(--accent3);background:rgba(245,158,11,.1);animation:pop .15s ease}
-.hole.hit{border-color:var(--green);background:rgba(16,185,129,.15);animation:hit .3s ease}
-.hole.miss{border-color:var(--red);background:rgba(239,68,68,.1)}
-@keyframes pop{0%{transform:scale(.8)}100%{transform:scale(1)}}
-@keyframes hit{0%{transform:scale(1.15)}100%{transform:scale(1)}}
-.mole{transition:all .2s;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
-.progress-bar{width:100%;max-width:360px;height:6px;background:var(--surface2);border-radius:999px;margin:1.5rem 0;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width .1s linear}
-.game-controls{display:flex;gap:.75rem;margin-top:1rem}
+/* ─── PROJECT ─── */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:all .3s}
+.proj-card:hover{border-color:rgba(34,211,238,.3);transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.proj-thumb{height:150px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative}
+.pt-game{background:linear-gradient(135deg,#1a0831,#0c1a38)}
+.pt-servo{background:linear-gradient(135deg,#0a1f10,#111a06)}
+.pt-door{background:linear-gradient(135deg,#1a1008,#0a1520)}
+.pt-web{background:linear-gradient(135deg,#10081a,#081018)}
+.proj-body{padding:1.25rem}
+.proj-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;margin-bottom:.45rem}
+.proj-desc{font-size:.8rem;color:var(--text2);line-height:1.65;margin-bottom:.9rem}
+.proj-tags{display:flex;gap:.35rem;flex-wrap:wrap}
+.ptag{font-size:.65rem;padding:.18rem .5rem;border-radius:999px;border:1px solid;font-weight:500}
+.ptag-p{color:var(--accent);border-color:rgba(124,58,237,.3);background:rgba(124,58,237,.07)}
+.ptag-c{color:var(--accent2);border-color:rgba(34,211,238,.3);background:rgba(34,211,238,.07)}
+.ptag-a{color:var(--accent3);border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.07)}
+.ptag-g{color:var(--green);border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.07)}
+.proj-btn{width:100%;margin-top:1rem;background:transparent;border:1px solid var(--border);
+  color:var(--text2);border-radius:8px;padding:.5rem;font-family:'DM Sans',sans-serif;
+  font-size:.8rem;cursor:pointer;transition:all .2s}
+.proj-btn:hover{background:rgba(34,211,238,.1);border-color:var(--accent2);color:var(--accent2)}
 
-/* RANK PAGE */
-.rank-container{padding-top:56px;min-height:100vh;padding:80px 2rem 2rem;max-width:600px;margin:0 auto}
-.rank-container h2{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;margin-bottom:.5rem;text-align:center}
-.rank-sub{color:var(--text2);text-align:center;font-size:.85rem;margin-bottom:2rem}
-.rank-list{display:flex;flex-direction:column;gap:.6rem}
-.rank-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.25rem;display:flex;align-items:center;gap:1rem;transition:all .2s}
-.rank-item:hover{border-color:var(--border);background:var(--surface2)}
-.rank-item.gold{border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.05)}
-.rank-item.silver{border-color:rgba(160,160,184,.3)}
-.rank-item.bronze{border-color:rgba(245,158,11,.2)}
-.rank-num{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;min-width:28px;text-align:center}
-.rank-num.gold{color:var(--accent3)}
-.rank-num.silver{color:#a0a0b8}
-.rank-num.bronze{color:#cd7f32}
+/* ─── GAME ─── */
+.game-wrap{max-width:500px;margin:0 auto;padding:1.5rem 1rem 3rem;text-align:center}
+.game-wrap h2{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;margin-bottom:.25rem}
+.phase-bar{display:flex;gap:.4rem;margin:.9rem auto;max-width:360px;justify-content:center}
+.phase-chip{flex:1;padding:.3rem .4rem;border-radius:8px;font-size:.65rem;font-weight:700;
+  border:1px solid var(--border);color:var(--text2);text-align:center;transition:all .4s}
+.phase-chip.active-early{background:rgba(16,185,129,.15);border-color:var(--green);color:var(--green)}
+.phase-chip.active-mid{background:rgba(245,158,11,.15);border-color:var(--accent3);color:var(--accent3)}
+.phase-chip.active-late{background:rgba(244,63,94,.15);border-color:var(--red);color:var(--red)}
+.game-hud{display:flex;gap:.6rem;justify-content:center;margin:.9rem 0}
+.hud-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:.55rem 1rem;min-width:80px;text-align:center}
+.hud-label{font-size:.58rem;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.hud-val{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-top:.1rem}
+.hud-val.cyan{color:var(--accent2)}
+.hud-val.amber{color:var(--accent3)}
+.hud-val.red{color:var(--red)}
+.timer-bar{height:5px;background:var(--surface2);border-radius:999px;margin:.6rem auto;max-width:360px;overflow:hidden}
+.timer-fill{height:100%;border-radius:999px;transition:width .5s linear,background .5s}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:360px;margin:0 auto}
+.hole{background:var(--surface);border:2px solid var(--border);border-radius:14px;
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;cursor:pointer;transition:border-color .15s,background .15s;
+  user-select:none;position:relative;overflow:hidden}
+.hole:hover{border-color:var(--surface3)}
+.hole.mole-active{border-color:rgba(34,211,238,.5);background:rgba(34,211,238,.05);animation:pop .12s ease}
+.hole.bom-a-active{border-color:rgba(244,63,94,.6);background:rgba(244,63,94,.07);animation:pop .12s ease}
+.hole.bom-b-active{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.06);animation:pop .12s ease}
+.hole.hit-ok{border-color:var(--green);background:rgba(16,185,129,.12);animation:hitAnim .25s ease}
+.hole.hit-bomb{border-color:var(--red);background:rgba(244,63,94,.15);animation:hitAnim .25s ease}
+@keyframes pop{0%{transform:scale(.82)}100%{transform:scale(1)}}
+@keyframes hitAnim{0%{transform:scale(1.12)}100%{transform:scale(1)}}
+.game-ctrls{display:flex;gap:.6rem;justify-content:center;margin-top:1.1rem;flex-wrap:wrap}
+.hint-text{font-size:.72rem;color:var(--text2);margin-top:.75rem;line-height:1.6}
+
+/* ─── RANK ─── */
+.rank-wrap{max-width:580px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.rank-wrap h2{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;text-align:center;margin-bottom:.25rem}
+.rank-sub{color:var(--text2);text-align:center;font-size:.82rem;margin-bottom:1.75rem}
+.rank-list{display:flex;flex-direction:column;gap:.55rem}
+.rank-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:.85rem 1.1rem;display:flex;align-items:center;gap:.9rem;transition:all .2s}
+.rank-item.r-gold{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.04)}
+.rank-item.r-silver{border-color:rgba(192,192,192,.25)}
+.rank-item.r-bronze{border-color:rgba(205,127,50,.25)}
+.rank-pos{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;min-width:26px;text-align:center}
+.rank-pos.gold{color:var(--accent3)}
+.rank-pos.silver{color:#c0c0c0}
+.rank-pos.bronze{color:#cd7f32}
 .rank-info{flex:1}
-.rank-name{font-weight:600;font-size:.9rem}
-.rank-level{font-size:.7rem;color:var(--text2)}
+.rank-name{font-weight:600;font-size:.88rem}
+.rank-meta{font-size:.67rem;color:var(--text2)}
 .rank-score{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--accent2)}
-.rank-empty{text-align:center;color:var(--text2);padding:3rem;font-size:.9rem}
+.rank-empty{text-align:center;color:var(--text2);padding:3rem;font-size:.88rem}
+.rank-loading{text-align:center;color:var(--text2);padding:2rem;font-size:.85rem;opacity:.7}
 
-/* RULES */
-.rules-modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1.5rem;max-width:380px;width:90%}
-.rules-modal h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:1rem;color:var(--accent2)}
-.rule-item{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:.75rem;font-size:.85rem;color:var(--text2);line-height:1.5}
-.rule-num{min-width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:1px}
+/* ─── MODALS ─── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:2rem;max-width:400px;width:90%;text-align:center;position:relative}
+.modal h3{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:.6rem}
+.modal p{color:var(--text2);font-size:.86rem;line-height:1.6;margin-bottom:.75rem}
+.modal input{width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:9px;padding:.65rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:.9rem;margin:.6rem 0 1rem;outline:none;transition:border-color .2s}
+.modal input:focus{border-color:var(--accent)}
+.modal-close{position:absolute;top:.9rem;right:1rem;background:none;border:none;
+  color:var(--text2);font-size:1.1rem;cursor:pointer;line-height:1;padding:.25rem}
+.modal-close:hover{color:var(--text)}
+.rules-box{background:var(--surface2);border-radius:12px;padding:1rem;text-align:left;margin:.5rem 0 1rem}
+.rule-row{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.55rem;font-size:.8rem;color:var(--text2);line-height:1.5}
+.rule-num{min-width:20px;height:20px;border-radius:50%;background:var(--accent);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.done-score{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.5rem 0}
 
-/* ABOUT */
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
-.about-text h2{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;margin-bottom:1rem}
-.about-text p{color:var(--text2);font-size:.9rem;line-height:1.8;margin-bottom:1rem}
-.about-visual{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;text-align:center}
-.expo-icon{font-size:5rem;margin-bottom:1rem}
-.tech-tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
-.tech-tag{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.3rem .7rem;font-size:.75rem;color:var(--text2)}
-
-/* DIVIDER */
-.divider{height:1px;background:var(--border);margin:0 2rem}
-
-/* FOOTER */
-footer{text-align:center;padding:2rem;color:var(--text2);font-size:.8rem;border-top:1px solid var(--border)}
+/* ─── FOOTER ─── */
+footer{text-align:center;padding:2rem;color:var(--text2);font-size:.75rem;border-top:1px solid var(--border)}
 footer span{color:var(--accent2)}
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px}
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:999px}
-
-@media(max-width:600px){
-  .about-grid{grid-template-columns:1fr}
-  .hero-stats{gap:1.5rem}
-}
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
-  <div class="nav-logo">INFEX '26</div>
+  <div class="nav-logo">SMRDS INFEX '26</div>
   <div class="nav-links">
-    <button class="nav-btn active" onclick="showPage('home',this)">Home</button>
-    <button class="nav-btn" onclick="showPage('about',this)">About</button>
-    <button class="nav-btn" onclick="showPage('member',this)">Member</button>
-    <button class="nav-btn" onclick="showPage('project',this)">Project</button>
-    <button class="nav-btn" onclick="showPage('game',this)">Game</button>
-    <button class="nav-btn" onclick="showPage('rank',this)">Rank</button>
+    <button class="nav-btn active" onclick="goPage('home',this)">Home</button>
+    <button class="nav-btn" onclick="goPage('about',this)">About</button>
+    <button class="nav-btn" onclick="goPage('member',this)">Member</button>
+    <button class="nav-btn" onclick="goPage('project',this)">Project</button>
+    <button class="nav-btn" onclick="goPage('game',this)">Game</button>
+    <button class="nav-btn" onclick="goPage('rank',this)">Rank</button>
   </div>
 </nav>
 
-<!-- HOME PAGE -->
+<!-- ═══════════ HOME ═══════════ -->
 <div id="page-home" class="page active">
   <section class="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-glow"></div>
-    <div class="hero-badge"><span class="badge-dot"></span>Informatics Expo 2026 — Live Now</div>
-    <h1>We Build.<br><span>We Innovate.</span><br>We Expo.</h1>
-    <p>Dokumentasi kreatif kolaborasi tim kami dalam dunia informatika — dari Arduino interaktif, 3D Printing, hingga web modern.</p>
+    <div class="hero-dots"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-orb2"></div>
+    <div class="live-badge"><span class="live-dot"></span>Smaridasa Informatics Expo 2026 — Live</div>
+    <h1>We Build.<br><em>We Innovate.</em><br>We Expo.</h1>
+    <p class="hero-sub">Dokumentasi kreatif kolaborasi tim SMAN 10 Samarinda — dari Arduino interaktif, 3D Printing, hingga web modern yang kamu lihat sekarang.</p>
     <div class="hero-btns">
-      <button class="btn-primary" onclick="showPage('project',document.querySelectorAll('.nav-btn')[3])">Lihat Project</button>
-      <button class="btn-secondary" onclick="showPage('game',document.querySelectorAll('.nav-btn')[4])">Main Game</button>
+      <button class="btn-glow" onclick="goPage('project',document.querySelectorAll('.nav-btn')[3])">Lihat Project</button>
+      <button class="btn-outline" onclick="goPage('game',document.querySelectorAll('.nav-btn')[4])">Main Game</button>
     </div>
     <div class="hero-stats">
-      <div class="stat-item"><div class="stat-num" id="member-count">—</div><div class="stat-label">Anggota Tim</div></div>
-      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Sub-Tim</div></div>
-      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Project Utama</div></div>
+      <div class="stat"><div class="stat-n">31</div><div class="stat-l">Anggota Tim</div></div>
+      <div class="stat"><div class="stat-n">3</div><div class="stat-l">Sub-Tim</div></div>
+      <div class="stat"><div class="stat-n">3</div><div class="stat-l">Project Utama</div></div>
     </div>
   </section>
-  <footer>Made with ❤ by <span>Web Designer Team</span> · Informatics Expo 2026</footer>
+  <footer>Made with ❤ by <span>Web Designer Team</span> · Smaridasa Informatics Expo 2026</footer>
 </div>
 
-<!-- ABOUT PAGE -->
+<!-- ═══════════ ABOUT ═══════════ -->
 <div id="page-about" class="page">
-  <div class="section">
+  <div class="wrap">
     <div class="about-grid">
       <div class="about-text">
-        <div class="section-tag">Tentang Kami</div>
-        <h2>Informatics<br><span style="color:var(--accent)">Expo</span> 2026</h2>
+        <div class="sec-tag">Tentang Kami</div>
+        <h2 class="sec-title">Smaridasa<br><em>Informatics</em><br>Expo 2026</h2>
         <p>Website ini adalah dokumentasi kreatif dari kolaborasi tim kami dalam mengeksplorasi dunia informatika. Dari rancangan 3D Printing yang presisi, sistem Arduino yang interaktif, hingga desain web modern.</p>
         <p>Kami menyatukan berbagai keahlian teknologi dalam satu visi. Jelajahi karya kami dan temukan bagaimana setiap elemen teknis bersatu dalam pameran ini.</p>
-        <p style="color:var(--accent2);font-size:.85rem;font-weight:600">📍 Informatics Expo · 2026</p>
+        <a class="maps-link" href="https://www.google.com/maps/search/SMAN+10+Samarinda+Jl+PM+Noor" target="_blank">
+          📍 SMAN 10 Samarinda — Jl. PM Noor · Buka Maps →
+        </a>
       </div>
-      <div class="about-visual">
-        <div class="expo-icon">⚡</div>
-        <p style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:1rem">Teknologi yang Kami Pakai</p>
-        <div class="tech-tags">
-          <span class="tech-tag">Arduino</span>
-          <span class="tech-tag">3D Printing</span>
-          <span class="tech-tag">HTML/CSS/JS</span>
-          <span class="tech-tag">C++</span>
-          <span class="tech-tag">Sensor</span>
-          <span class="tech-tag">Whack-a-Mole</span>
-          <span class="tech-tag">PCB Design</span>
-          <span class="tech-tag">Web Dev</span>
+      <div class="about-card">
+        <div class="about-icon">⚡</div>
+        <div class="about-card-title">Teknologi yang Kami Pakai</div>
+        <div class="tech-wrap">
+          <span class="tech-chip">Arduino</span>
+          <span class="tech-chip">3D Printing</span>
+          <span class="tech-chip">HTML/CSS/JS</span>
+          <span class="tech-chip">C++</span>
+          <span class="tech-chip">Sensor Ultrasonic</span>
+          <span class="tech-chip">Servo Motor</span>
+          <span class="tech-chip">Whack-a-Mole</span>
+          <span class="tech-chip">Web Dev</span>
+          <span class="tech-chip">Firebase</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MEMBER PAGE -->
+<!-- ═══════════ MEMBER ═══════════ -->
 <div id="page-member" class="page">
-  <div class="section">
-    <div class="section-tag">Tim Kami</div>
-    <div class="section-title">Meet the <span>Team</span></div>
-    <p class="section-sub">Tim kami terdiri dari tiga divisi yang saling melengkapi untuk menciptakan karya terbaik di Informatics Expo 2026.</p>
+  <div class="wrap">
+    <div class="sec-tag">Tim Kami</div>
+    <div class="sec-title">Meet the <em>Team</em></div>
+    <p class="sec-sub">31 anggota lintas divisi yang berkolaborasi mewujudkan Smaridasa Informatics Expo 2026.</p>
 
-    <p style="font-size:.75rem;color:var(--accent2);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:1rem">🌐 Web Designer Team</p>
-    <div class="member-grid" id="web-team"></div>
+    <!-- PJ GURU -->
+    <div class="member-section">
+      <div class="member-section-label">⭐ Penanggung Jawab Guru</div>
+      <div class="member-grid center-1" id="grid-guru"></div>
+    </div>
 
-    <p style="font-size:.75rem;color:var(--accent3);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin:2.5rem 0 1rem">⚡ Arduino & 3D Print Team</p>
-    <div class="member-grid" id="arduino-team"></div>
+    <!-- KETUA SEMUA TIM -->
+    <div class="member-section">
+      <div class="member-section-label">👑 Ketua Semua Tim</div>
+      <div class="member-grid center-1" id="grid-ketua-all"></div>
+    </div>
 
-    <p style="font-size:.75rem;color:var(--green);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin:2.5rem 0 1rem">🎨 Decoration Team</p>
-    <div class="member-grid" id="deco-team"></div>
+    <!-- WEB DESIGNER -->
+    <div class="member-section">
+      <div class="member-section-label" style="color:var(--accent2)">🌐 Web Designer Team</div>
+      <div class="member-grid" id="grid-web"></div>
+    </div>
+
+    <!-- ARDUINO & 3D PRINT -->
+    <div class="member-section">
+      <div class="member-section-label" style="color:var(--accent3)">⚡ Arduino & 3D Print Team</div>
+      <div class="member-grid" id="grid-arduino"></div>
+    </div>
+
+    <!-- DECORATION -->
+    <div class="member-section">
+      <div class="member-section-label" style="color:var(--green)">🎨 Decoration Team</div>
+      <div class="member-grid" id="grid-deco"></div>
+    </div>
   </div>
 </div>
 
-<!-- PROJECT PAGE -->
+<!-- ═══════════ PROJECT ═══════════ -->
 <div id="page-project" class="page">
-  <div class="section">
-    <div class="section-tag">Our Project</div>
-    <div class="section-title">Karya <span>Kami</span></div>
-    <p class="section-sub">Tiga project utama yang kami kembangkan bersama dalam Informatics Expo 2026.</p>
-    <div class="project-grid">
-      <div class="project-card">
-        <div class="project-img game-bg">🎯</div>
-        <div class="project-body">
-          <div class="project-title">Whack-a-Mole Game</div>
-          <div class="project-desc">Game interaktif berbasis web dengan sistem level (Early/Mid/Late), timer, poin, dan global leaderboard top 10. Dibuat murni dengan HTML, CSS, dan JavaScript.</div>
-          <div class="project-tags">
-            <span class="tag purple">HTML/CSS/JS</span>
-            <span class="tag cyan">Interactive</span>
-            <span class="tag amber">Leaderboard</span>
+  <div class="wrap">
+    <div class="sec-tag">Our Project</div>
+    <div class="sec-title">Karya <em>Kami</em></div>
+    <p class="sec-sub">Project unggulan yang dikembangkan tim Smaridasa Informatics Expo 2026.</p>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="proj-thumb pt-game">🎯</div>
+        <div class="proj-body">
+          <div class="proj-title">Whack-a-Mole Game</div>
+          <div class="proj-desc">Game interaktif berbasis web — 3 fase dalam 3 menit: Early (mole + Bom A), Mid (tambah Bom B menyamar), Late (Bom A & B random, makin cepat). Global leaderboard via Firebase.</div>
+          <div class="proj-tags">
+            <span class="ptag ptag-p">HTML/CSS/JS</span>
+            <span class="ptag ptag-c">Firebase</span>
+            <span class="ptag ptag-a">Leaderboard</span>
           </div>
-          <button class="project-btn" onclick="showPage('game',document.querySelectorAll('.nav-btn')[4])">Main Sekarang →</button>
+          <button class="proj-btn" onclick="goPage('game',document.querySelectorAll('.nav-btn')[4])">Main Sekarang →</button>
         </div>
       </div>
-      <div class="project-card">
-        <div class="project-img arduino-bg">🤖</div>
-        <div class="project-body">
-          <div class="project-title">Arduino Bomb System</div>
-          <div class="project-desc">Sistem Arduino interaktif dengan dua tipe tampilan: visual langsung (Tipe A) dan transformasi visual (Tipe B). Mode Early, Mid, dan Late dengan tingkat kesulitan berbeda.</div>
-          <div class="project-tags">
-            <span class="tag amber">Arduino</span>
-            <span class="tag purple">C++</span>
-            <span class="tag cyan">Sensor</span>
+      <div class="proj-card">
+        <div class="proj-thumb pt-servo">🦾</div>
+        <div class="proj-body">
+          <div class="proj-title">Excavator Arduino</div>
+          <div class="proj-desc">Miniatur excavator berbasis Arduino yang digerakkan 2 servo motor untuk simulasi gerakan lengan dan bucket. Dikontrol secara manual dengan presisi tinggi.</div>
+          <div class="proj-tags">
+            <span class="ptag ptag-a">Arduino</span>
+            <span class="ptag ptag-p">C++</span>
+            <span class="ptag ptag-g">2x Servo</span>
           </div>
-          <button class="project-btn">Lihat Detail →</button>
+          <button class="proj-btn">Lihat Detail →</button>
         </div>
       </div>
-      <div class="project-card">
-        <div class="project-img web-bg">🌐</div>
-        <div class="project-body">
-          <div class="project-title">Portfolio Website</div>
-          <div class="project-desc">Website dokumentasi Informatics Expo yang kamu lihat sekarang. Dibangun oleh Web Designer Team dengan desain modern, animasi halus, dan tema dark futuristik.</div>
-          <div class="project-tags">
-            <span class="tag purple">HTML/CSS</span>
-            <span class="tag cyan">JavaScript</span>
-            <span class="tag amber">UI Design</span>
+      <div class="proj-card">
+        <div class="proj-thumb pt-door">🚪</div>
+        <div class="proj-body">
+          <div class="proj-title">Pintu Otomatis Arduino</div>
+          <div class="proj-desc">Sistem pembuka pintu otomatis menggunakan sensor ultrasonik HC-SR04. Pintu terbuka secara otomatis saat mendeteksi objek dalam jarak tertentu, lalu menutup kembali.</div>
+          <div class="proj-tags">
+            <span class="ptag ptag-a">Arduino</span>
+            <span class="ptag ptag-c">Ultrasonic</span>
+            <span class="ptag ptag-p">C++</span>
           </div>
-          <button class="project-btn">Ini dia! 😎</button>
+          <button class="proj-btn">Lihat Detail →</button>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-thumb pt-web">🌐</div>
+        <div class="proj-body">
+          <div class="proj-title">Portfolio Website</div>
+          <div class="proj-desc">Website dokumentasi Informatics Expo yang kamu lihat sekarang — dark futuristic theme, flip card member, game Whack-a-Mole, global leaderboard Firebase real-time.</div>
+          <div class="proj-tags">
+            <span class="ptag ptag-p">HTML/CSS/JS</span>
+            <span class="ptag ptag-c">Firebase</span>
+            <span class="ptag ptag-a">UI Design</span>
+          </div>
+          <button class="proj-btn" onclick="goPage('home',document.querySelectorAll('.nav-btn')[0])">Ini dia! 😎</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- GAME PAGE -->
+<!-- ═══════════ GAME ═══════════ -->
 <div id="page-game" class="page">
-  <div class="game-container">
-    <div class="game-header">
-      <div class="section-tag">Mini Game</div>
-      <h2>🎯 Whack-a-Mole</h2>
+  <div class="game-wrap">
+    <div class="sec-tag" style="margin-bottom:.5rem">Mini Game</div>
+    <h2>🎯 Whack-a-Mole</h2>
+
+    <div class="phase-bar">
+      <div class="phase-chip" id="ph-early">Early 0–40s</div>
+      <div class="phase-chip" id="ph-mid">Mid 41–100s</div>
+      <div class="phase-chip" id="ph-late">Late 101–180s</div>
     </div>
-    <div class="game-meta">
-      <div class="game-stat"><div class="game-stat-label">Pemain</div><div class="game-stat-val" id="g-player" style="font-size:.9rem;color:var(--text)">—</div></div>
-      <div class="game-stat"><div class="game-stat-label">Poin</div><div class="game-stat-val green" id="g-score">0</div></div>
-      <div class="game-stat"><div class="game-stat-label">Waktu</div><div class="game-stat-val red" id="g-timer">30</div></div>
-      <div class="game-stat"><div class="game-stat-label">Level</div><div class="game-stat-val" id="g-level" style="font-size:.9rem">—</div></div>
+
+    <div class="game-hud">
+      <div class="hud-box"><div class="hud-label">Pemain</div><div class="hud-val" id="g-player" style="font-size:.85rem;color:var(--text)">—</div></div>
+      <div class="hud-box"><div class="hud-label">Poin</div><div class="hud-val cyan" id="g-score">0</div></div>
+      <div class="hud-box"><div class="hud-label">Waktu</div><div class="hud-val red" id="g-timer">3:00</div></div>
     </div>
-    <div class="progress-bar"><div class="progress-fill" id="g-progress" style="width:100%"></div></div>
-    <div class="game-board" id="game-board"></div>
-    <div class="game-controls" style="margin-top:1.25rem">
-      <button class="btn-primary" onclick="openStartModal()">Mulai Game</button>
-      <button class="btn-secondary" onclick="openRulesModal()">Aturan</button>
-      <button class="btn-secondary" onclick="showPage('rank',document.querySelectorAll('.nav-btn')[5])">Lihat Rank</button>
+    <div class="timer-bar"><div class="timer-fill" id="g-fill" style="width:100%;background:var(--green)"></div></div>
+
+    <div class="board" id="game-board"></div>
+
+    <div class="hint-text" id="g-hint">Tekan <b>Mulai Game</b> untuk bermain</div>
+
+    <div class="game-ctrls">
+      <button class="btn-glow" onclick="openStartModal()">Mulai Game</button>
+      <button class="btn-outline" onclick="openRulesModal()">Aturan</button>
+      <button class="btn-outline" onclick="goPage('rank',document.querySelectorAll('.nav-btn')[5])">Lihat Rank</button>
     </div>
   </div>
 </div>
 
-<!-- RANK PAGE -->
+<!-- ═══════════ RANK ═══════════ -->
 <div id="page-rank" class="page">
-  <div class="rank-container">
-    <div class="section-tag" style="display:block;text-align:center;margin:0 auto 1rem">Leaderboard</div>
+  <div class="rank-wrap">
+    <div class="sec-tag" style="display:block;text-align:center;margin-bottom:.75rem">Leaderboard</div>
     <h2>🏆 Global Rank</h2>
-    <p class="rank-sub">Top 10 pemain terbaik</p>
-    <div class="rank-list" id="rank-list"></div>
-    <div style="text-align:center;margin-top:2rem">
-      <button class="btn-secondary" onclick="showPage('game',document.querySelectorAll('.nav-btn')[4])">Main Lagi</button>
+    <p class="rank-sub">Top 10 pemain terbaik — real-time dari semua device</p>
+    <div class="rank-list" id="rank-list"><div class="rank-loading">Memuat data...</div></div>
+    <div style="text-align:center;margin-top:1.5rem">
+      <button class="btn-outline" onclick="goPage('game',document.querySelectorAll('.nav-btn')[4])">Main Lagi</button>
     </div>
   </div>
 </div>
 
-<!-- MODALS -->
-<div id="start-modal" class="modal-overlay" style="display:none">
+<!-- ═══════════ MODALS ═══════════ -->
+<!-- START -->
+<div id="modal-start" class="overlay" style="display:none">
   <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-start')">✕</button>
     <h3>🎯 Mulai Game</h3>
-    <p>Masukkan namamu dan pilih level kesulitan.</p>
-    <input type="text" id="player-name-input" placeholder="Nama kamu..." maxlength="20">
-    <p style="font-size:.8rem;margin-bottom:.5rem">Pilih Level:</p>
-    <div class="level-btns">
-      <button class="level-btn selected" onclick="selectLevel(this,'early')">Early<br><span style="font-size:.65rem;color:inherit;opacity:.7">30s · 60 mole</span></button>
-      <button class="level-btn" onclick="selectLevel(this,'mid')">Mid<br><span style="font-size:.65rem;color:inherit;opacity:.7">60s · 90 mole</span></button>
-      <button class="level-btn" onclick="selectLevel(this,'late')">Late<br><span style="font-size:.65rem;color:inherit;opacity:.7">80s · 120 mole</span></button>
-    </div>
-    <div style="display:flex;gap:.6rem;margin-top:1rem">
-      <button class="btn-primary" style="flex:1" onclick="startGame()">Mulai!</button>
-      <button class="btn-secondary" onclick="document.getElementById('start-modal').style.display='none'">Batal</button>
-    </div>
+    <p>Masukkan namamu. Game berlangsung <b>3 menit</b> dengan 3 fase otomatis!</p>
+    <input type="text" id="name-input" placeholder="Nama kamu..." maxlength="20">
+    <button class="btn-glow" style="width:100%" onclick="startGame()">Gas! 🚀</button>
   </div>
 </div>
 
-<div id="rules-modal" class="modal-overlay" style="display:none">
-  <div class="rules-modal">
-    <button style="float:right;background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.1rem" onclick="document.getElementById('rules-modal').style.display='none'">✕</button>
+<!-- RULES -->
+<div id="modal-rules" class="overlay" style="display:none">
+  <div class="modal" style="max-width:440px">
+    <button class="modal-close" onclick="closeModal('modal-rules')">✕</button>
     <h3>📋 Aturan Main</h3>
-    <div class="rule-item"><div class="rule-num">1</div><span>Klik mole (🐹) yang muncul di lubang untuk dapat poin</span></div>
-    <div class="rule-item"><div class="rule-num">2</div><span>Setiap klik mole yang benar = +2 poin</span></div>
-    <div class="rule-item"><div class="rule-num">3</div><span>Early: 30 detik · Mid: 60 detik · Late: 80 detik</span></div>
-    <div class="rule-item"><div class="rule-num">4</div><span>Game selesai saat waktu habis, langsung ke halaman Rank</span></div>
-    <div class="rule-item"><div class="rule-num">5</div><span>Hanya top 10 skor tertinggi yang tersimpan di leaderboard</span></div>
-    <button class="btn-primary" style="width:100%;margin-top:1rem" onclick="document.getElementById('rules-modal').style.display='none'">Mengerti!</button>
+    <div class="rules-box">
+      <div class="rule-row"><div class="rule-num">1</div><span>Game berlangsung <b>3 menit (180 detik)</b> dengan 3 fase otomatis</span></div>
+      <div class="rule-row"><div class="rule-num">2</div><span><b>Early (0–40s):</b> Mole 🐹 dan Bom A 💣 muncul terpisah. Klik mole = +2 poin</span></div>
+      <div class="rule-row"><div class="rule-num">3</div><span><b>Mid (41–100s):</b> Tambahan Bom B 🐹💥 — tampak seperti mole tapi berubah jadi bom! Kecepatan meningkat</span></div>
+      <div class="rule-row"><div class="rule-num">4</div><span><b>Late (101–180s):</b> Bom A & B muncul random, kecepatan paling tinggi</span></div>
+      <div class="rule-row"><div class="rule-num">5</div><span>Klik bom = <b>-5 poin</b>. Jangan terkecoh Bom B!</span></div>
+      <div class="rule-row"><div class="rule-num">6</div><span>Skor masuk <b>Global Rank</b> jika termasuk top 10 dari semua device</span></div>
+    </div>
+    <button class="btn-glow" style="width:100%" onclick="closeModal('modal-rules')">Siap!</button>
   </div>
 </div>
 
-<div id="done-modal" class="modal-overlay" style="display:none">
+<!-- DONE -->
+<div id="modal-done" class="overlay" style="display:none">
   <div class="modal">
     <h3>🎉 Game Selesai!</h3>
-    <p id="done-player-name" style="font-weight:700;color:var(--accent2);font-size:1.1rem;margin:.5rem 0"></p>
-    <p>Skor kamu:</p>
-    <div style="font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--accent3);margin:1rem 0" id="done-score">0</div>
-    <p id="done-rank-msg" style="color:var(--text2);font-size:.85rem;margin-bottom:1.5rem"></p>
+    <div id="done-name" style="font-weight:700;color:var(--accent2);font-size:1rem;margin:.25rem 0"></div>
+    <div class="done-score" id="done-score">0</div>
+    <div id="done-msg" style="color:var(--text2);font-size:.82rem;margin-bottom:1.25rem"></div>
     <div style="display:flex;gap:.6rem">
-      <button class="btn-primary" style="flex:1" onclick="openStartModal();document.getElementById('done-modal').style.display='none'">Main Lagi</button>
-      <button class="btn-secondary" style="flex:1" onclick="document.getElementById('done-modal').style.display='none';showPage('rank',document.querySelectorAll(\'.nav-btn\')[5])">Lihat Rank</button>
+      <button class="btn-glow" style="flex:1" onclick="closeModal('modal-done');openStartModal()">Main Lagi</button>
+      <button class="btn-outline" style="flex:1" onclick="closeModal('modal-done');goPage('rank',document.querySelectorAll(\'.nav-btn\')[5])">Lihat Rank</button>
     </div>
   </div>
 </div>
 
+<!-- ═══════════ SCRIPTS ═══════════ -->
 <script>
-// DATA ANGGOTA (isi sesuai tim kamu!)
-const members = {
+// ── FIREBASE CONFIG ── ganti dengan config kamu!
+const firebaseConfig = {
+  apiKey: "AIzaSyAnBRZl9hiHuBsJLuh-g2Ic7VdQ4UQsigg",
+  authDomain: "smaridasa-infex.firebaseapp.com",
+  databaseURL: "https://smaridasa-infex-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "smaridasa-infex",
+  storageBucket: "smaridasa-infex.firebasestorage.app",
+  messagingSenderId: "567220792192",
+  appId: "1:567220792192:web:6188b77e92278c56192f65"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ── MEMBER DATA ── edit sesuai tim
+const memberData = {
+  guru: [
+    {name:"Nama Guru PJ",kelas:"Guru",ttl:"Samarinda, 1 Jan 1980",ig:"@guru_pj",motto:"Semangat terus!",role:"pj-guru",av:"G",color:"av-amber",emoji:"👨‍🏫"}
+  ],
+  ketuaAll: [
+    {name:"Nama Ketua Semua Tim",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ketua_all",motto:"Bersama kita bisa!",role:"ketua",av:"K",color:"av-purple",emoji:"👑"}
+  ],
   web: [
-    {name:"Nama Ketua",role:"Ketua",div:"Web",letter:"K",color:"purple",lead:true},
-    {name:"Member Web 1",role:"Web Designer",div:"Web",letter:"W",color:"cyan"},
-    {name:"Member Web 2",role:"Web Designer",div:"Web",letter:"W",color:"cyan"},
+    {name:"PJ Web Designer",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@pj_web",motto:"Code is art.",role:"pj",av:"P",color:"av-cyan",emoji:"💻"},
+    {name:"Member Web 1",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@member1",motto:"Placeholder motto",role:"member",av:"W",color:"av-cyan",emoji:"🌐"},
+    {name:"Raphael Evander Lian Rustan",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@raphaelrustan",motto:"Watashi wa samuraidesu",role:"member",av:"R",color:"av-cyan",emoji:"⚔️"},
+    {name:"Member Web 3",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@member3",motto:"Placeholder motto",role:"member",av:"W",color:"av-cyan",emoji:"🎨"},
+    {name:"Member Web 4",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@member4",motto:"Placeholder motto",role:"member",av:"W",color:"av-cyan",emoji:"🚀"},
   ],
   arduino: [
-    {name:"Member Arduino 1",role:"Arduino Dev",div:"Arduino",letter:"A",color:"amber"},
-    {name:"Member Arduino 2",role:"Arduino Dev",div:"Arduino",letter:"A",color:"amber"},
-    {name:"Member 3D Print",role:"3D Print",div:"Arduino",letter:"P",color:"amber"},
+    {name:"PJ Arduino & 3D Print",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@pj_arduino",motto:"Build to impress.",role:"pj",av:"P",color:"av-amber",emoji:"⚡"},
+    {name:"Arduino Member 1",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ard1",motto:"Placeholder motto",role:"member",av:"A",color:"av-amber",emoji:"🤖"},
+    {name:"Arduino Member 2",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ard2",motto:"Placeholder motto",role:"member",av:"A",color:"av-amber",emoji:"🤖"},
+    {name:"Arduino Member 3",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ard3",motto:"Placeholder motto",role:"member",av:"A",color:"av-amber",emoji:"🤖"},
+    {name:"Arduino Member 4",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ard4",motto:"Placeholder motto",role:"member",av:"A",color:"av-amber",emoji:"🤖"},
+    {name:"Arduino Member 5",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ard5",motto:"Placeholder motto",role:"member",av:"A",color:"av-amber",emoji:"🤖"},
+    {name:"3D Print Member 1",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@3d1",motto:"Placeholder motto",role:"member",av:"3",color:"av-amber",emoji:"🖨️"},
+    {name:"3D Print Member 2",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@3d2",motto:"Placeholder motto",role:"member",av:"3",color:"av-amber",emoji:"🖨️"},
   ],
   deco: [
-    {name:"Member Deco 1",role:"Decoration",div:"Deco",letter:"D",color:"green"},
-    {name:"Member Deco 2",role:"Decoration",div:"Deco",letter:"D",color:"green"},
+    {name:"PJ Decoration",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@pj_deco",motto:"Decorate with heart.",role:"pj",av:"P",color:"av-green",emoji:"🎨"},
+    {name:"Deco Member 1",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco1",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 2",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco2",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 3",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco3",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 4",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco4",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 5",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco5",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 6",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco6",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 7",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco7",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 8",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco8",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 9",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco9",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 10",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco10",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 11",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco11",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 12",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco12",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 13",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco13",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 14",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco14",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 15",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco15",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 16",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco16",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Deco Member 17",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco17",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
   ]
 };
 
+// ── RENDER MEMBER ──
+function makeCard(m){
+  const roleBadge = m.role==='pj'?'<span class="member-role-badge rb-pj">PJ</span>':
+    m.role==='ketua'?'<span class="member-role-badge rb-ketua">Ketua</span>':
+    m.role==='pj-guru'?'<span class="member-role-badge rb-pj">PJ Guru</span>':'';
+  return `<div class="flip-card" onclick="this.classList.toggle('flipped')">
+    <div class="flip-inner">
+      <div class="flip-front">
+        <div class="member-avatar ${m.color}">${m.av}</div>
+        <div class="member-name-f">${m.name}</div>
+        ${roleBadge}
+        <div class="member-motto">"${m.motto}"</div>
+      </div>
+      <div class="flip-back">
+        <div class="back-name">${m.name}</div>
+        <div class="back-row"><span class="back-label">Kelas</span><span class="back-val">${m.kelas}</span></div>
+        <div class="back-row"><span class="back-label">TTL</span><span class="back-val">${m.ttl}</span></div>
+        <div class="back-row"><span class="back-label">IG</span><span class="back-val">${m.ig}</span></div>
+        <div class="back-emoji">${m.emoji}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
 function renderMembers(){
-  document.getElementById('member-count').textContent = members.web.length + members.arduino.length + members.deco.length;
-  const renderTeam = (arr,elId) => {
-    document.getElementById(elId).innerHTML = arr.map(m=>`
-      <div class="member-card">
-        <div class="avatar ${m.color}">${m.letter}</div>
-        <div class="member-name">${m.name}</div>
-        <div class="member-role">${m.role}</div>
-        ${m.lead?'<div class="member-lead">⭐ Ketua Tim</div>':''}
-      </div>`).join('');
-  };
-  renderTeam(members.web,'web-team');
-  renderTeam(members.arduino,'arduino-team');
-  renderTeam(members.deco,'deco-team');
+  document.getElementById('grid-guru').innerHTML = memberData.guru.map(makeCard).join('');
+  document.getElementById('grid-ketua-all').innerHTML = memberData.ketuaAll.map(makeCard).join('');
+  document.getElementById('grid-web').innerHTML = memberData.web.map(makeCard).join('');
+  document.getElementById('grid-arduino').innerHTML = memberData.arduino.map(makeCard).join('');
+  document.getElementById('grid-deco').innerHTML = memberData.deco.map(makeCard).join('');
 }
 renderMembers();
 
-// NAVIGATION
-function showPage(id, btn){
+// ── NAVIGATION ──
+function goPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
+  if(btn)btn.classList.add('active');
   window.scrollTo(0,0);
-  if(id==='rank') renderRank();
+  if(id==='rank')loadRank();
 }
 
-// GAME LOGIC
-let gameState = {running:false,score:0,timer:0,interval:null,moleInterval:null,level:'early',playerName:'',maxTime:30};
-let selectedLevel = 'early';
-const levelConfig = {early:{time:30,speed:900},mid:{time:60,speed:700},late:{time:80,speed:550}};
+// ── MODAL ──
+function openStartModal(){if(gs.running)stopGame();document.getElementById('modal-start').style.display='flex'}
+function openRulesModal(){document.getElementById('modal-rules').style.display='flex'}
+function closeModal(id){document.getElementById(id).style.display='none'}
 
-const board = document.getElementById('game-board');
+// ── GAME STATE ──
+const TOTAL = 180;
+const gs = {running:false,score:0,elapsed:0,playerName:'',ticker:null,moleT:null,bombAT:null,bombBT:null,bombBCount:0,phase:''};
+let activeCells = {}; // idx -> type: 'mole'|'bomA'|'bomB'
+
+// Build board
+const boardEl = document.getElementById('game-board');
 for(let i=0;i<9;i++){
-  const h = document.createElement('div');
-  h.className = 'hole';
-  h.dataset.idx = i;
-  h.innerHTML = '<div class="mole"></div>';
+  const h=document.createElement('div');h.className='hole';h.dataset.i=i;
   h.addEventListener('click',()=>whack(i));
-  board.appendChild(h);
+  boardEl.appendChild(h);
 }
-const holes = ()=>document.querySelectorAll('.hole');
 
-function openStartModal(){
-  if(gameState.running) stopGame();
-  document.getElementById('start-modal').style.display='flex';
-}
-function openRulesModal(){document.getElementById('rules-modal').style.display='flex';}
-function selectLevel(el,lvl){
-  document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedLevel=lvl;
-}
+function holes(){return document.querySelectorAll('.hole')}
+function holeEl(i){return boardEl.children[i]}
 
 function startGame(){
-  const name = document.getElementById('player-name-input').value.trim();
-  if(!name){document.getElementById('player-name-input').focus();return;}
-  document.getElementById('start-modal').style.display='none';
+  const name=document.getElementById('name-input').value.trim();
+  if(!name){document.getElementById('name-input').focus();return;}
+  closeModal('modal-start');
   stopGame();
-  const cfg = levelConfig[selectedLevel];
-  gameState = {running:true,score:0,timer:cfg.time,level:selectedLevel,playerName:name,maxTime:cfg.time,interval:null,moleInterval:null};
-  document.getElementById('g-player').textContent = name;
-  document.getElementById('g-score').textContent = 0;
-  document.getElementById('g-level').textContent = selectedLevel.charAt(0).toUpperCase()+selectedLevel.slice(1);
-  updateTimer();
-  gameState.interval = setInterval(()=>{
-    gameState.timer--;
-    updateTimer();
-    if(gameState.timer<=0) endGame();
-  },1000);
-  gameState.moleInterval = setInterval(showMole, cfg.speed);
+  gs.running=true;gs.score=0;gs.elapsed=0;gs.playerName=name;gs.bombBCount=0;
+  document.getElementById('g-player').textContent=name;
+  updateHUD();
+  setPhase('early');
+  scheduleMole();
+  scheduleBombA();
+  gs.ticker=setInterval(tick,1000);
 }
 
-function updateTimer(){
-  document.getElementById('g-timer').textContent = gameState.timer;
-  const pct = (gameState.timer/gameState.maxTime)*100;
-  document.getElementById('g-progress').style.width = pct+'%';
-  document.getElementById('g-progress').style.background = pct>50?'linear-gradient(90deg,var(--accent),var(--accent2))':pct>20?'linear-gradient(90deg,var(--accent3),var(--red))':'var(--red)';
+function tick(){
+  gs.elapsed++;
+  updateHUD();
+  if(gs.elapsed<=40 && gs.phase!=='early')setPhase('early');
+  else if(gs.elapsed>40 && gs.elapsed<=100 && gs.phase!=='mid')setPhase('mid');
+  else if(gs.elapsed>100 && gs.phase!=='late')setPhase('late');
+  if(gs.elapsed>=TOTAL)endGame();
 }
 
-let currentMole = -1;
-function showMole(){
-  holes().forEach(h=>{h.classList.remove('active');h.querySelector('.mole').textContent='';});
-  currentMole = Math.floor(Math.random()*9);
-  const h = board.children[currentMole];
-  h.classList.add('active');
-  h.querySelector('.mole').textContent = '🐹';
+function updateHUD(){
+  const rem=TOTAL-gs.elapsed;
+  const m=Math.floor(rem/60);const s=rem%60;
+  document.getElementById('g-timer').textContent=m+':'+(s<10?'0':'')+s;
+  document.getElementById('g-score').textContent=gs.score;
+  const pct=(rem/TOTAL)*100;
+  const fill=document.getElementById('g-fill');
+  fill.style.width=pct+'%';
+  fill.style.background=pct>55?'var(--green)':pct>25?'var(--accent3)':'var(--red)';
+}
+
+function setPhase(p){
+  gs.phase=p;
+  document.getElementById('ph-early').className='phase-chip'+(p==='early'?' active-early':'');
+  document.getElementById('ph-mid').className='phase-chip'+(p==='mid'?' active-mid':'');
+  document.getElementById('ph-late').className='phase-chip'+(p==='late'?' active-late':'');
+  const hint={early:'🐹 Mole +2 | 💣 Bom A -5',mid:'🐹 Mole +2 | 💣 Bom A -5 | 🎭 Bom B menyamar!',late:'⚡ Semua muncul random, makin cepat!'};
+  document.getElementById('g-hint').textContent=hint[p]||'';
+  clearInterval(gs.moleT);clearInterval(gs.bombAT);clearInterval(gs.bombBT);
+  scheduleMole();scheduleBombA();if(p==='mid'||p==='late')scheduleBombB();
+}
+
+function getSpeed(){return gs.phase==='early'?900:gs.phase==='mid'?700:550}
+
+function randEmpty(){
+  const empty=[];for(let i=0;i<9;i++){if(!activeCells[i])empty.push(i);}
+  if(!empty.length)return -1;return empty[Math.floor(Math.random()*empty.length)];
+}
+
+function showAt(idx,type){
+  if(idx<0||activeCells[idx])return;
+  activeCells[idx]=type;
+  const h=holeEl(idx);
+  if(type==='mole'){h.textContent='🐹';h.className='hole mole-active';}
+  else if(type==='bomA'){h.textContent='💣';h.className='hole bom-a-active';}
+  else if(type==='bomB'){
+    h.textContent='🐹';h.className='hole bom-b-active';
+    // after delay transform to bomb
+    const delay=gs.phase==='mid'?1200:800;
+    setTimeout(()=>{if(activeCells[idx]==='bomB'){h.textContent='💣';}},delay);
+  }
+  const dur=getSpeed()*1.8;
+  setTimeout(()=>{clearCell(idx);},dur);
+}
+
+function clearCell(idx){
+  if(activeCells[idx]){delete activeCells[idx];const h=holeEl(idx);h.className='hole';h.textContent='';}
+}
+
+function scheduleMole(){
+  gs.moleT=setInterval(()=>{if(!gs.running)return;showAt(randEmpty(),'mole');},getSpeed());
+}
+function scheduleBombA(){
+  gs.bombAT=setInterval(()=>{if(!gs.running)return;showAt(randEmpty(),'bomA');},getSpeed()*2.2);
+}
+function scheduleBombB(){
+  gs.bombBT=setInterval(()=>{
+    if(!gs.running)return;
+    gs.bombBCount++;
+    if(gs.bombBCount%4===0)showAt(randEmpty(),'bomB');
+  },getSpeed()*0.9);
 }
 
 function whack(idx){
-  if(!gameState.running) return;
-  const h = board.children[idx];
-  if(idx===currentMole && h.classList.contains('active')){
-    gameState.score += 2;
-    document.getElementById('g-score').textContent = gameState.score;
-    h.classList.remove('active');
-    h.classList.add('hit');
-    h.querySelector('.mole').textContent = '💥';
-    currentMole = -1;
-    setTimeout(()=>{h.classList.remove('hit');h.querySelector('.mole').textContent='';},300);
+  if(!gs.running)return;
+  const type=activeCells[idx];
+  if(!type)return;
+  const h=holeEl(idx);
+  if(type==='mole'){
+    gs.score+=2;h.className='hole hit-ok';h.textContent='💥';
+    clearCell(idx);setTimeout(()=>{h.className='hole';h.textContent='';},280);
+  } else {
+    gs.score=Math.max(0,gs.score-5);h.className='hole hit-bomb';h.textContent='💥';
+    clearCell(idx);setTimeout(()=>{h.className='hole';h.textContent='';},280);
   }
+  document.getElementById('g-score').textContent=gs.score;
 }
 
 function stopGame(){
-  clearInterval(gameState.interval);
-  clearInterval(gameState.moleInterval);
-  holes().forEach(h=>{h.classList.remove('active','hit','miss');h.querySelector('.mole').textContent='';});
-  gameState.running=false;
-  currentMole=-1;
+  clearInterval(gs.ticker);clearInterval(gs.moleT);clearInterval(gs.bombAT);clearInterval(gs.bombBT);
+  gs.running=false;activeCells={};
+  holes().forEach(h=>{h.className='hole';h.textContent='';});
+  ['ph-early','ph-mid','ph-late'].forEach(id=>document.getElementById(id).className='phase-chip');
 }
 
 function endGame(){
   stopGame();
-  const sc = gameState.score;
-  const nm = gameState.playerName;
-  const lv = gameState.level;
-  saveScore(nm,sc,lv);
-  document.getElementById('done-player-name').textContent = nm;
-  document.getElementById('done-score').textContent = sc;
-  const rank = getRank(nm,sc);
-  document.getElementById('done-rank-msg').textContent = rank <= 10 ? `Kamu masuk Top ${rank}! 🎉` : 'Skor kamu belum masuk top 10, coba lagi!';
-  document.getElementById('done-modal').style.display='flex';
+  saveScore(gs.playerName,gs.score);
+  document.getElementById('done-name').textContent=gs.playerName;
+  document.getElementById('done-score').textContent=gs.score;
+  document.getElementById('done-msg').textContent='Skormu tersimpan di Global Rank!';
+  document.getElementById('modal-done').style.display='flex';
 }
 
-// LEADERBOARD
-function getScores(){try{return JSON.parse(localStorage.getItem('infex_scores')||'[]')}catch{return[]}}
-function saveScore(name,score,level){
-  let scores = getScores();
-  scores.push({name,score,level,date:new Date().toLocaleDateString('id-ID')});
-  scores.sort((a,b)=>b.score-a.score);
-  scores = scores.slice(0,10);
-  try{localStorage.setItem('infex_scores',JSON.stringify(scores))}catch{}
-}
-function getRank(name,score){
-  const scores = getScores();
-  const idx = scores.findIndex(s=>s.name===name&&s.score===score);
-  return idx===-1?99:idx+1;
+// ── FIREBASE RANK ──
+function saveScore(name,score){
+  const ref=db.ref('infex_scores');
+  ref.push({name,score,ts:Date.now()}).catch(()=>{});
+  // trim to top 10
+  ref.orderByChild('score').limitToFirst(1).once('value',snap=>{
+    ref.orderByChild('score').once('value',all=>{
+      const items=[];all.forEach(c=>items.push({key:c.key,...c.val()}));
+      items.sort((a,b)=>b.score-a.score);
+      if(items.length>10){items.slice(10).forEach(it=>ref.child(it.key).remove());}
+    });
+  });
 }
 
-function renderRank(){
-  const scores = getScores();
-  const medals = ['gold','silver','bronze'];
-  const medalIcon = ['🥇','🥈','🥉'];
-  const rl = document.getElementById('rank-list');
-  if(!scores.length){
-    rl.innerHTML = '<div class="rank-empty">Belum ada skor. Jadilah yang pertama! 🎮</div>';
-    return;
-  }
-  rl.innerHTML = scores.map((s,i)=>`
-    <div class="rank-item ${medals[i]||''}">
-      <div class="rank-num ${medals[i]||''}">${i<3?medalIcon[i]:i+1}</div>
-      <div class="rank-info">
-        <div class="rank-name">${s.name}</div>
-        <div class="rank-level">${s.level} · ${s.date}</div>
-      </div>
-      <div class="rank-score">${s.score}</div>
-    </div>`).join('');
+function loadRank(){
+  const rl=document.getElementById('rank-list');
+  rl.innerHTML='<div class="rank-loading">Memuat data...</div>';
+  db.ref('infex_scores').orderByChild('score').limitToLast(10).once('value',snap=>{
+    const items=[];snap.forEach(c=>items.push(c.val()));
+    items.sort((a,b)=>b.score-a.score);
+    if(!items.length){rl.innerHTML='<div class="rank-empty">Belum ada skor. Jadilah yang pertama! 🎮</div>';return;}
+    const medals=[['🥇','r-gold','gold'],['🥈','r-silver','silver'],['🥉','r-bronze','bronze']];
+    rl.innerHTML=items.map((s,i)=>{
+      const [icon,cls,pc]=medals[i]||[i+1,'',''];
+      const d=s.ts?new Date(s.ts).toLocaleDateString('id-ID'):'—';
+      return`<div class="rank-item ${cls}">
+        <div class="rank-pos ${pc}">${icon||i+1}</div>
+        <div class="rank-info"><div class="rank-name">${s.name}</div><div class="rank-meta">${d}</div></div>
+        <div class="rank-score">${s.score}</div>
+      </div>`;
+    }).join('');
+  }).catch(()=>{rl.innerHTML='<div class="rank-empty">Gagal memuat. Cek koneksi Firebase kamu.</div>';});
 }
-renderRank();
+loadRank();
 </script>
 </body>
 </html>
