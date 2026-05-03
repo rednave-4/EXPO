@@ -220,8 +220,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:999;height:58px;
 .rank-loading{text-align:center;color:var(--text2);padding:2rem;font-size:.85rem;opacity:.7}
 
 /* ─── MODALS ─── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99999;
   display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.overlay .modal{position:relative;z-index:100000;}
+.overlay button{position:relative;z-index:100001;pointer-events:all;}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;
   padding:2rem;max-width:400px;width:90%;text-align:center;position:relative}
 .modal h3{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:.6rem}
@@ -771,52 +773,67 @@ function endGame(){
 // ── FIREBASE RANK ──
 function saveScore(name,score){
   const ref=db.ref('infex_scores');
-  // Push new score first, then trim
-  ref.push({name,score,ts:Date.now()}).then(()=>{
-    // After saving, trim to keep only top 10
-    ref.orderByChild('score').once('value',snap=>{
+  const newEntry={name:String(name),score:Number(score),ts:Date.now()};
+  // Use set on a push key - more reliable than .push().then()
+  const newKey=ref.push().key;
+  ref.child(newKey).set(newEntry,function(err){
+    if(err){console.error('Firebase write error:',err);return;}
+    console.log('Score saved:',newEntry);
+    // Trim: remove entries beyond top 10 by score
+    ref.orderByChild('score').once('value',function(snap){
       const items=[];
-      snap.forEach(c=>items.push({key:c.key,...c.val()}));
-      items.sort((a,b)=>b.score-a.score);
-      // Remove entries ranked below 10
+      snap.forEach(function(c){items.push({key:c.key,score:c.val().score});});
+      items.sort(function(a,b){return b.score-a.score;});
       if(items.length>10){
-        const toDelete=items.slice(10);
-        toDelete.forEach(it=>ref.child(it.key).remove());
+        items.slice(10).forEach(function(it){ref.child(it.key).remove();});
       }
     });
-  }).catch(e=>console.error('Save error:',e));
+  });
 }
 
+let rankListenerAttached=false;
 function loadRank(){
   const rl=document.getElementById('rank-list');
+  if(!rl)return;
   rl.innerHTML='<div class="rank-loading">⏳ Memuat data...</div>';
-  // Real-time listener so rank updates live across devices
-  db.ref('infex_scores').orderByChild('score').on('value',snap=>{
+  const ref=db.ref('infex_scores');
+  // Detach any old listener first
+  if(rankListenerAttached){ref.off('value');rankListenerAttached=false;}
+  ref.orderByChild('score').on('value',function(snap){
+    rankListenerAttached=true;
     const items=[];
-    snap.forEach(c=>items.push(c.val()));
-    items.sort((a,b)=>b.score-a.score);
+    snap.forEach(function(c){
+      const v=c.val();
+      if(v&&typeof v.score==='number')items.push(v);
+    });
+    items.sort(function(a,b){return b.score-a.score;});
     const top=items.slice(0,10);
     if(!top.length){
       rl.innerHTML='<div class="rank-empty">Belum ada skor. Jadilah yang pertama! 🎮</div>';
       return;
     }
     const medals=[['🥇','r-gold','gold'],['🥈','r-silver','silver'],['🥉','r-bronze','bronze']];
-    rl.innerHTML=top.map((s,i)=>{
-      const[icon,cls,pc]=medals[i]||[i+1,'',''];
+    rl.innerHTML=top.map(function(s,i){
+      const m=medals[i]||[i+1,'',''];
+      const icon=m[0],cls=m[1],pc=m[2];
       const d=s.ts?new Date(s.ts).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'—';
-      return`<div class="rank-item ${cls}">
-        <div class="rank-pos ${pc}">${icon||i+1}</div>
-        <div class="rank-info"><div class="rank-name">${escHtml(s.name)}</div><div class="rank-meta">${d}</div></div>
-        <div class="rank-score">${s.score}</div>
-      </div>`;
+      return'<div class="rank-item '+cls+'">'
+        +'<div class="rank-pos '+pc+'">'+(typeof icon==='string'?icon:i+1)+'</div>'
+        +'<div class="rank-info"><div class="rank-name">'+escHtml(s.name)+'</div><div class="rank-meta">'+d+'</div></div>'
+        +'<div class="rank-score">'+s.score+'</div>'
+        +'</div>';
     }).join('');
-  },err=>{
-    rl.innerHTML='<div class="rank-empty">⚠️ Gagal memuat. Cek koneksi / Firebase rules.</div>';
+  },function(err){
+    rl.innerHTML='<div class="rank-empty">⚠️ Gagal memuat. Pastikan Firebase Rules sudah diset ke true.</div>';
     console.error('loadRank error:',err);
   });
 }
-function escHtml(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
-loadRank();
+function escHtml(t){
+  if(typeof t!=='string')t=String(t||'');
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+// Load rank on page open (will refresh when user navigates to rank page)
+window.addEventListener('load',function(){loadRank();});
 </script>
 </body>
 </html>
