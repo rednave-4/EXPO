@@ -281,7 +281,7 @@ footer span{color:var(--accent2)}
       <button class="btn-outline" onclick="goPage('game',document.querySelectorAll('.nav-btn')[4])">Main Game</button>
     </div>
     <div class="hero-stats">
-      <div class="stat"><div class="stat-n">31</div><div class="stat-l">Anggota Tim</div></div>
+      <div class="stat"><div class="stat-n">24</div><div class="stat-l">Anggota Tim</div></div>
       <div class="stat"><div class="stat-n">3</div><div class="stat-l">Sub-Tim</div></div>
       <div class="stat"><div class="stat-n">3</div><div class="stat-l">Project Utama</div></div>
     </div>
@@ -326,7 +326,7 @@ footer span{color:var(--accent2)}
   <div class="wrap">
     <div class="sec-tag">Tim Kami</div>
     <div class="sec-title">Meet the <em>Team</em></div>
-    <p class="sec-sub">31 anggota lintas divisi yang berkolaborasi mewujudkan Smaridasa Informatics Expo 2026.</p>
+    <p class="sec-sub">24 anggota lintas divisi yang berkolaborasi mewujudkan Smaridasa Informatics Expo 2026.</p>
 
     <!-- PJ GURU -->
     <div class="member-section">
@@ -525,56 +525,48 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ── MEMBER DATA ── edit sesuai tim
+// ── MEMBER DATA 
 const memberData = {
   guru: [
-    {name:"Nama Guru PJ",kelas:"Guru",ttl:"Samarinda, 1 Jan 1980",ig:"@guru_pj",motto:"Semangat terus!",role:"pj-guru",av:"G",color:"av-amber",emoji:"👨‍🏫"}
+    {name:"Fani Yulianti, S.Pd.",photo:"bu fan.jpeg",kelas:"Informatika & Matematika",ttl:"Bandung, 07 Juni 1999",ig:"@uteeeee_07",motto:"Humble in achievement, ambitious in dreams",role:"pj-guru",av:"G",color:"av-amber",emoji:"☺️"}
   ],
   ketuaAll: [
-    {name:"Nama Ketua Semua Tim",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ketua_all",motto:"Bersama kita bisa!",role:"ketua",av:"K",color:"av-purple",emoji:"👑"}
+    {name:"Raphael Evander Lian Rustan",photo:"evan.jpeg",kelas:"XI-9",ttl:"Surabaya, 14 April 2009",ig:"@ecobrahunter",motto:"Work in silence, let the result speak.",role:"ketua",av:"K",color:"av-purple",emoji:"😑😏"}
   ],
   web: [
-    {name:"PJ Web Designer",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@pj_web",motto:"Code is art.",role:"pj",av:"P",color:"av-cyan",emoji:"💻"},
-    {name:"Member Web 1",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@member1",motto:"Placeholder motto",role:"member",av:"W",color:"av-cyan",emoji:"🌐"},
-    {name:"Raphael Evander Lian Rustan",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@raphaelrustan",motto:"Watashi wa samuraidesu",role:"member",av:"R",color:"av-cyan",emoji:"⚔️"},
-    {name:"Member Web 3",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@member3",motto:"Placeholder motto",role:"member",av:"W",color:"av-cyan",emoji:"🎨"},
-    {name:"Member Web 4",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@member4",motto:"Placeholder motto",role:"member",av:"W",color:"av-cyan",emoji:"🚀"},
+    {name:"Hanifah Nur Rash",photo:"hani.jpeg",kelas:"XI-9",ttl:"Boyolali, 17 November 2008",ig:"@ifah._.xd",motto:"Art is the way the heart speaks without having to explain anything.",role:"pj",av:"P",color:"av-cyan",emoji:"🪷"},
+    {name:"Muhammad Athar Noor Fadillah ",photo:"athar.jpg",kelas:"XI-6",ttl:"Samarinda, 13 Januari 2009",ig:"@atarruniverse",motto:"I will not go back on my word, because that is my way of life.",role:"member",av:"W",color:"av-cyan",emoji:"🙂‍↕️"},
+    {name:"Raphael Evander Lian Rustan",photo:"evan.jpeg",kelas:"XI-9",ttl:"Surabaya, 14 April 2009",ig:"@ecobrahunter",motto:"Work in silence, let the result speak.",role:"member",av:"R",color:"av-cyan",emoji:"😑😏"},
   ],
   arduino: [
-    {name:"PJ Arduino & 3D Print",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@pj_arduino",motto:"Build to impress.",role:"pj",av:"P",color:"av-amber",emoji:"⚡"},
-    {name:"Arduino Member 1",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ard1",motto:"Placeholder motto",role:"member",av:"A",color:"av-amber",emoji:"🤖"},
-    {name:"Arduino Member 2",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ard2",motto:"Placeholder motto",role:"member",av:"A",color:"av-amber",emoji:"🤖"},
-    {name:"Arduino Member 3",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ard3",motto:"Placeholder motto",role:"member",av:"A",color:"av-amber",emoji:"🤖"},
-    {name:"Arduino Member 4",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ard4",motto:"Placeholder motto",role:"member",av:"A",color:"av-amber",emoji:"🤖"},
-    {name:"Arduino Member 5",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@ard5",motto:"Placeholder motto",role:"member",av:"A",color:"av-amber",emoji:"🤖"},
-    {name:"3D Print Member 1",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@3d1",motto:"Placeholder motto",role:"member",av:"3",color:"av-amber",emoji:"🖨️"},
-    {name:"3D Print Member 2",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@3d2",motto:"Placeholder motto",role:"member",av:"3",color:"av-amber",emoji:"🖨️"},
+    {name:"Nisa Rizqiyyah Adianur Amalia",photo:"Lia.jpeg",kelas:"XI-9",ttl:"Samarinda, 27 Juli 2009",ig:"@nrzqiyya",motto:"life needs rhythm",role:"pj",av:"P",color:"av-amber",emoji:"😵‍💫"},
+    {name:"Michael Sebastian L.",photo:"Michael.jpeg",kelas:"XI-8",ttl:"Berau, 25 April 2009",ig:"@mikara.lam",motto:"Failure is just another wave pushing toward victory",role:"member",av:"A",color:"av-amber",emoji:"🎭"},
+    {name:"Fathan Rizqullah Ihwan",photo:"Fathan.jpeg",kelas:"XI-8",ttl:"Samarinda, 24 Desember 2009",ig:"@fathann.24",motto:"Pelan, tapi pasti",role:"member",av:"A",color:"av-amber",emoji:"💻"},
+    {name:"Daffa Rossi Saputra ",photo:"Daffa.jpeg",kelas:"XI-11",ttl:"Samarinda, 23 Juli 2009",ig:"@dapocii_",motto:"ga harus hebat untuk memulai, tapi harus mulai biar jadi hebat",role:"member",av:"A",color:"av-amber",emoji:"😁"},
+    {name:"Muhammad Irgi Fakhri Zumar",photo:"Irgi.jpeg",kelas:"XI-11",ttl:"Samarinda, 03 Maret 2009",ig:"@fthypix_xz",motto:"I have no enemy",role:"member",av:"A",color:"av-amber",emoji:"😜"},
+    
   ],
   deco: [
-    {name:"PJ Decoration",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@pj_deco",motto:"Decorate with heart.",role:"pj",av:"P",color:"av-green",emoji:"🎨"},
-    {name:"Deco Member 1",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco1",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 2",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco2",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 3",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco3",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 4",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco4",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 5",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco5",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 6",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco6",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 7",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco7",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 8",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco8",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 9",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco9",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 10",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco10",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 11",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco11",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 12",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco12",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 13",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco13",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
+    {name:"Angelica Patricia",photo:"Angel.jpeg",kelas:"XI-3",ttl:"Kubar, 20 Mei 2010",ig:"@flowwaangel",motto:"YOLO",role:"pj",av:"A",color:"av-green",emoji:"😹"},
+    {name:"Fairuz Nur Janeta",photo:"Fairuz.jpeg",kelas:"XI-2",ttl:"Samarinda, 10 Feb 2009",ig:"@frzntaa",motto:"Tidak akan pernah menyerah mengejar mimpi sebelum mati",role:"member",av:"F",color:"av-green",emoji:"🤍"},
+    {name:"Antung Putri Yasmin Anastasya",photo:"Yasmin.jpeg",kelas:"XI-2",ttl:"Samarinda, 04 Mei 2009",ig:"@lovly_yasminn_",motto:"No sweat without sweet",role:"member",av:"A",color:"av-green",emoji:"🌸"},
+    {name:"Alfira Dinaya Khairunnisa",photo:"Alfira.jpeg",kelas:"XI-1",ttl:"Samarinda, 22 Mei 2009",ig:"@alfiiradinaya",motto:"Long story short, I survived",role:"member",av:"A",color:"av-green",emoji:"🌕"},
+    {name:"M Fahri Angkasa",photo:"Fahri.jpeg",kelas:"XI-5",ttl:"Samarinda, 07 Apr 2008",ig:"@Rirangkasa",motto:"That's that, and this is this.",role:"member",av:"M",color:"av-green",emoji:"😓"},
+    {name:"Nuraini Nadhifah Kemala",photo:"Kemala.jpeg",kelas:"XI-1",ttl:"Samarinda, 08 Apr 2009",ig:"@dhifa_kemala",motto:"Semua pasti berlalu, masih ada hari esok",role:"member",av:"N",color:"av-green",emoji:"💃🏻"},
+    {name:"Nayla Safira Maulida",photo:"Nayla.jpeg",kelas:"XI-10",ttl:"Samarinda, 26 Mar 2009",ig:"@molarpeep",motto:"Do what feels right",role:"member",av:"N",color:"av-green",emoji:"🫧"},
+    {name:"Alta Naisya Dzikri Airalbi",photo:"Alta.jpeg",kelas:"XI-7",ttl:"Samarinda, 23 Jun 2009",ig:"@alta.naisyaa",motto:"Living life to the fullest",role:"member",av:"A",color:"av-green",emoji:"🤠"},
+    {name:"Arsya Farany",photo:"Arsya.jpeg",kelas:"XI-3",ttl:"Samarinda, 28 Sep 2009",ig:"@arsyafarany86",motto:"Kita dilahirkan untuk menjadi nyata, bukan menjadi sempurna",role:"member",av:"A",color:"av-green",emoji:"🥹"},
+    {name:"Al Mayra Bilqis Rahmania",photo:"Mayra.jpeg",kelas:"XI-4",ttl:"Samarinda, 17 Mei 2009",ig:"@almayrab.r",motto:"Inovasi Tanpa Batas",role:"member",av:"A",color:"av-green",emoji:"💫"},
+    {name:"Ketut Samara Bunga Pratiwi Suraga",photo:"Samara.jpeg",kelas:"XI-6",ttl:"Sendawar, 03 Nov 2009",ig:"@samarafleur_",motto:"Happiness is made, not awarded. Create your own happiness and don't wait for it",role:"member",av:"K",color:"av-green",emoji:"🐰"},
+    {name:"Saskia Salsabila",photo:"Saskia.jpeg",kelas:"XI-2",ttl:"Samarinda, 15 Feb 2009",ig:"@mo0minsaa_",motto:"Long live all the magic we made-one day, we will be remembered",role:"member",av:"S",color:"av-green",emoji:"🌊"},
+    {name:"Azzahra Nabilla Sofian",photo:"Nabilla.jpeg",kelas:"XI-7",ttl:"Samarinda, 03 Des 2008",ig:"@answowowo",motto:"Tetaplah waras",role:"member",av:"A",color:"av-green",emoji:"👽"},
+    {name:"Rika Dwi Amelia Putri",photo:"Rika.jpeg",kelas:"XI-12",ttl:"Samarinda, 14 Feb 2009",ig:"@aameliaptri._",motto:"Born to shine",role:"member",av:"R",color:"av-green",emoji:"🤓"},
+
     {name:"Deco Member 14",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco14",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
     {name:"Deco Member 15",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco15",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 16",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco16",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-    {name:"Deco Member 17",kelas:"XI RPL",ttl:"Samarinda, 1 Jan 2008",ig:"@deco17",motto:"Placeholder motto",role:"member",av:"D",color:"av-green",emoji:"🌟"},
-  ]
+    ]
 };
 
-// ── RENDER MEMBER ──
-// Untuk pasang foto: tambahkan field photo:"nama_file.jpg" di data member
-// Letakkan file foto di folder yang sama dengan HTML ini
 function makeCard(m){
   const roleBadge = m.role==='pj'?'<span class="member-role-badge rb-pj">PJ</span>':
     m.role==='ketua'?'<span class="member-role-badge rb-ketua">Ketua</span>':
