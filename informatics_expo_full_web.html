@@ -117,8 +117,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:999;height:58px;
   border-radius:16px;border:1px solid var(--border);background:var(--surface);
   display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;text-align:center;overflow:hidden}
 .flip-back{transform:rotateY(180deg);background:var(--surface2);border-color:rgba(124,58,237,.3);justify-content:flex-start;padding-top:1.25rem}
-.member-photo{width:68px;height:68px;border-radius:50%;object-fit:cover;
-  border:2px solid var(--accent);margin-bottom:.6rem;background:var(--surface3)}
+.member-photo{width:68px;height:68px;border-radius:50%;object-fit:cover;object-position:top;
+  border:2px solid var(--accent);margin-bottom:.6rem;background:var(--surface3);display:block}
 .member-avatar{width:68px;height:68px;border-radius:50%;margin-bottom:.6rem;
   display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;
   font-size:1.5rem;font-weight:800;border:2px solid}
@@ -503,7 +503,7 @@ footer span{color:var(--accent2)}
     <div id="done-msg" style="color:var(--text2);font-size:.82rem;margin-bottom:1.25rem"></div>
     <div style="display:flex;gap:.6rem">
       <button class="btn-glow" style="flex:1" onclick="closeModal('modal-done');openStartModal()">Main Lagi</button>
-      <button class="btn-outline" style="flex:1" onclick="closeModal('modal-done');goPage('rank',document.querySelectorAll(\'.nav-btn\')[5])">Lihat Rank</button>
+      <button class="btn-outline" style="flex:1" id="btn-lihat-rank">Lihat Rank</button>
     </div>
   </div>
 </div>
@@ -571,14 +571,22 @@ const memberData = {
 };
 
 // ── RENDER MEMBER ──
+// Untuk pasang foto: tambahkan field photo:"nama_file.jpg" di data member
+// Letakkan file foto di folder yang sama dengan HTML ini
 function makeCard(m){
   const roleBadge = m.role==='pj'?'<span class="member-role-badge rb-pj">PJ</span>':
     m.role==='ketua'?'<span class="member-role-badge rb-ketua">Ketua</span>':
-    m.role==='pj-guru'?'<span class="member-role-badge rb-pj">PJ Guru</span>':'';
+    m.role==='pj-guru'?'<span class="member-role-badge rb-pj">PJ Guru</span>':
+    m.role==='member'?'<span class="member-role-badge rb-member">Member</span>':''
+  ;
+  const frontImg = m.photo
+    ? `<img class="member-photo" src="${m.photo}" alt="${m.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      + `<div class="member-avatar ${m.color}" style="display:none">${m.av}</div>`
+    : `<div class="member-avatar ${m.color}">${m.av}</div>`;
   return `<div class="flip-card" onclick="this.classList.toggle('flipped')">
     <div class="flip-inner">
       <div class="flip-front">
-        <div class="member-avatar ${m.color}">${m.av}</div>
+        ${frontImg}
         <div class="member-name-f">${m.name}</div>
         ${roleBadge}
         <div class="member-motto">"${m.motto}"</div>
@@ -747,43 +755,67 @@ function endGame(){
   saveScore(gs.playerName,gs.score);
   document.getElementById('done-name').textContent=gs.playerName;
   document.getElementById('done-score').textContent=gs.score;
-  document.getElementById('done-msg').textContent='Skormu tersimpan di Global Rank!';
+  document.getElementById('done-msg').textContent='Skormu tersimpan di Global Rank! 🏆';
+  // wire up Lihat Rank button cleanly (no escaped quotes issue)
+  const btnRank=document.getElementById('btn-lihat-rank');
+  if(btnRank){
+    btnRank.onclick=function(){
+      closeModal('modal-done');
+      const rankBtn=document.querySelectorAll('.nav-btn')[5];
+      goPage('rank',rankBtn);
+    };
+  }
   document.getElementById('modal-done').style.display='flex';
 }
 
 // ── FIREBASE RANK ──
 function saveScore(name,score){
   const ref=db.ref('infex_scores');
-  ref.push({name,score,ts:Date.now()}).catch(()=>{});
-  // trim to top 10
-  ref.orderByChild('score').limitToFirst(1).once('value',snap=>{
-    ref.orderByChild('score').once('value',all=>{
-      const items=[];all.forEach(c=>items.push({key:c.key,...c.val()}));
+  // Push new score first, then trim
+  ref.push({name,score,ts:Date.now()}).then(()=>{
+    // After saving, trim to keep only top 10
+    ref.orderByChild('score').once('value',snap=>{
+      const items=[];
+      snap.forEach(c=>items.push({key:c.key,...c.val()}));
       items.sort((a,b)=>b.score-a.score);
-      if(items.length>10){items.slice(10).forEach(it=>ref.child(it.key).remove());}
+      // Remove entries ranked below 10
+      if(items.length>10){
+        const toDelete=items.slice(10);
+        toDelete.forEach(it=>ref.child(it.key).remove());
+      }
     });
-  });
+  }).catch(e=>console.error('Save error:',e));
 }
 
 function loadRank(){
   const rl=document.getElementById('rank-list');
-  rl.innerHTML='<div class="rank-loading">Memuat data...</div>';
-  db.ref('infex_scores').orderByChild('score').limitToLast(10).once('value',snap=>{
-    const items=[];snap.forEach(c=>items.push(c.val()));
+  rl.innerHTML='<div class="rank-loading">⏳ Memuat data...</div>';
+  // Real-time listener so rank updates live across devices
+  db.ref('infex_scores').orderByChild('score').on('value',snap=>{
+    const items=[];
+    snap.forEach(c=>items.push(c.val()));
     items.sort((a,b)=>b.score-a.score);
-    if(!items.length){rl.innerHTML='<div class="rank-empty">Belum ada skor. Jadilah yang pertama! 🎮</div>';return;}
+    const top=items.slice(0,10);
+    if(!top.length){
+      rl.innerHTML='<div class="rank-empty">Belum ada skor. Jadilah yang pertama! 🎮</div>';
+      return;
+    }
     const medals=[['🥇','r-gold','gold'],['🥈','r-silver','silver'],['🥉','r-bronze','bronze']];
-    rl.innerHTML=items.map((s,i)=>{
-      const [icon,cls,pc]=medals[i]||[i+1,'',''];
-      const d=s.ts?new Date(s.ts).toLocaleDateString('id-ID'):'—';
+    rl.innerHTML=top.map((s,i)=>{
+      const[icon,cls,pc]=medals[i]||[i+1,'',''];
+      const d=s.ts?new Date(s.ts).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'—';
       return`<div class="rank-item ${cls}">
         <div class="rank-pos ${pc}">${icon||i+1}</div>
-        <div class="rank-info"><div class="rank-name">${s.name}</div><div class="rank-meta">${d}</div></div>
+        <div class="rank-info"><div class="rank-name">${escHtml(s.name)}</div><div class="rank-meta">${d}</div></div>
         <div class="rank-score">${s.score}</div>
       </div>`;
     }).join('');
-  }).catch(()=>{rl.innerHTML='<div class="rank-empty">Gagal memuat. Cek koneksi Firebase kamu.</div>';});
+  },err=>{
+    rl.innerHTML='<div class="rank-empty">⚠️ Gagal memuat. Cek koneksi / Firebase rules.</div>';
+    console.error('loadRank error:',err);
+  });
 }
+function escHtml(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 loadRank();
 </script>
 </body>
