@@ -328,34 +328,16 @@ footer span{color:var(--accent2)}
     <div class="sec-title">Meet the <em>Team</em></div>
     <p class="sec-sub">24 anggota lintas divisi yang berkolaborasi mewujudkan Smaridasa Informatics Expo 2026.</p>
 
-    <!-- PJ GURU -->
-    <div class="member-section">
-      <div class="member-section-label">⭐ Penanggung Jawab Guru</div>
-      <div class="member-grid center-1" id="grid-guru"></div>
-    </div>
-
     <!-- KETUA SEMUA TIM -->
     <div class="member-section">
-      <div class="member-section-label">👑 Ketua Semua Tim</div>
+      <div class="member-section-label">👑 Full Stack Develover</div>
       <div class="member-grid center-1" id="grid-ketua-all"></div>
     </div>
 
     <!-- WEB DESIGNER -->
     <div class="member-section">
-      <div class="member-section-label" style="color:var(--accent2)">🌐 Web Designer Team</div>
+      <div class="member-section-label" style="color:var(--accent2)">🌐 Beta Tester & 2D Desainer & Firebase Configuration</div>
       <div class="member-grid" id="grid-web"></div>
-    </div>
-
-    <!-- ARDUINO & 3D PRINT -->
-    <div class="member-section">
-      <div class="member-section-label" style="color:var(--accent3)">⚡ Arduino & 3D Print Team</div>
-      <div class="member-grid" id="grid-arduino"></div>
-    </div>
-
-    <!-- DECORATION -->
-    <div class="member-section">
-      <div class="member-section-label" style="color:var(--green)">🎨 Decoration Team</div>
-      <div class="member-grid" id="grid-deco"></div>
     </div>
   </div>
 </div>
@@ -527,43 +509,13 @@ const db = firebase.database();
 
 // ── MEMBER DATA 
 const memberData = {
-  guru: [
-    {name:"Fani Yulianti, S.Pd.",photo:"bu fan.jpeg",kelas:"Informatika & Matematika",ttl:"Bandung, 07 Juni 1999",ig:"@uteeeee_07",motto:"Humble in achievement, ambitious in dreams",role:"pj-guru",av:"G",color:"av-amber",emoji:"☺️"}
-  ],
   ketuaAll: [
     {name:"Raphael Evander Lian Rustan",photo:"evan.jpeg",kelas:"XI-9",ttl:"Surabaya, 14 April 2009",ig:"@ecobrahunter",motto:"Work in silence, let the result speak.",role:"ketua",av:"K",color:"av-purple",emoji:"😑😏"}
   ],
   web: [
-    {name:"Hanifah Nur Rash",photo:"hani.jpeg",kelas:"XI-9",ttl:"Boyolali, 17 November 2008",ig:"@ifah._.xd",motto:"Art is the way the heart speaks without having to explain anything.",role:"pj",av:"P",color:"av-cyan",emoji:"🪷"},
-    {name:"Muhammad Athar Noor Fadillah ",photo:"athar.jpg",kelas:"XI-6",ttl:"Samarinda, 13 Januari 2009",ig:"@atarruniverse",motto:"I will not go back on my word, because that is my way of life.",role:"member",av:"W",color:"av-cyan",emoji:"🙂‍↕️"},
-    {name:"Raphael Evander Lian Rustan",photo:"evan.jpeg",kelas:"XI-9",ttl:"Surabaya, 14 April 2009",ig:"@ecobrahunter",motto:"Work in silence, let the result speak.",role:"member",av:"R",color:"av-cyan",emoji:"😑😏"},
+    {name:"Jonathan Doxan Pangngroan",photo:"",kelas:"XI-9",ttl:"Samarinda, 23 Oktober 2009",ig:"@neopyhte",motto:"Mejikuhibiniu kulihat kamu",role:"pj",av:"P",color:"av-cyan",emoji:"🪷"},
+    {name:"Abdullah Azzam",photo:"",kelas:"XI-9",ttl:"Samarinda, 25 Oktober 2008",ig:"@zamtheconqueror",motto:"Berikan akun 10 sukarno, maka kan ku taklukkan valoran",role:"member",av:"W",color:"av-cyan",emoji:"🙂‍↕️"},
   ],
-  arduino: [
-    {name:"Nisa Rizqiyyah Adianur Amalia",photo:"Lia.jpeg",kelas:"XI-9",ttl:"Samarinda, 27 Juli 2009",ig:"@nrzqiyya",motto:"life needs rhythm",role:"pj",av:"P",color:"av-amber",emoji:"😵‍💫"},
-    {name:"Michael Sebastian L.",photo:"Michael.jpeg",kelas:"XI-8",ttl:"Berau, 25 April 2009",ig:"@mikara.lam",motto:"Failure is just another wave pushing toward victory",role:"member",av:"A",color:"av-amber",emoji:"🎭"},
-    {name:"Fathan Rizqullah Ihwan",photo:"Fathan.jpeg",kelas:"XI-8",ttl:"Samarinda, 24 Desember 2009",ig:"@fathann.24",motto:"Pelan, tapi pasti",role:"member",av:"A",color:"av-amber",emoji:"💻"},
-    {name:"Daffa Rossi Saputra ",photo:"Daffa.jpeg",kelas:"XI-11",ttl:"Samarinda, 23 Juli 2009",ig:"@dapocii_",motto:"ga harus hebat untuk memulai, tapi harus mulai biar jadi hebat",role:"member",av:"A",color:"av-amber",emoji:"😁"},
-    {name:"Muhammad Irgi Fakhri Zumar",photo:"Irgi.jpeg",kelas:"XI-11",ttl:"Samarinda, 03 Maret 2009",ig:"@fthypix_xz",motto:"I have no enemy",role:"member",av:"A",color:"av-amber",emoji:"😜"},
-    
-  ],
-  deco: [
-    {name:"Angelica Patricia",photo:"Angel.jpeg",kelas:"XI-3",ttl:"Kubar, 20 Mei 2010",ig:"@flowwaangel",motto:"YOLO",role:"pj",av:"A",color:"av-green",emoji:"😹"},
-    {name:"Fairuz Nur Janeta",photo:"Fairuz.jpeg",kelas:"XI-2",ttl:"Samarinda, 10 Feb 2009",ig:"@frzntaa",motto:"Tidak akan pernah menyerah mengejar mimpi sebelum mati",role:"member",av:"F",color:"av-green",emoji:"🤍"},
-    {name:"Antung Putri Yasmin Anastasya",photo:"Yasmin.jpeg",kelas:"XI-2",ttl:"Samarinda, 04 Mei 2009",ig:"@lovly_yasminn_",motto:"No sweat without sweet",role:"member",av:"A",color:"av-green",emoji:"🌸"},
-    {name:"Alfira Dinaya Khairunnisa",photo:"Alfira.jpeg",kelas:"XI-1",ttl:"Samarinda, 22 Mei 2009",ig:"@alfiiradinaya",motto:"Long story short, I survived",role:"member",av:"A",color:"av-green",emoji:"🌕"},
-    {name:"M Fahri Angkasa",photo:"Fahri.jpeg",kelas:"XI-5",ttl:"Samarinda, 07 Apr 2008",ig:"@Rirangkasa",motto:"That's that, and this is this.",role:"member",av:"M",color:"av-green",emoji:"😓"},
-    {name:"Nuraini Nadhifah Kemala",photo:"Kemala.jpeg",kelas:"XI-1",ttl:"Samarinda, 08 Apr 2009",ig:"@dhifa_kemala",motto:"Semua pasti berlalu, masih ada hari esok",role:"member",av:"N",color:"av-green",emoji:"💃🏻"},
-    {name:"Nayla Safira Maulida",photo:"Nayla.jpeg",kelas:"XI-10",ttl:"Samarinda, 26 Mar 2009",ig:"@molarpeep",motto:"Do what feels right",role:"member",av:"N",color:"av-green",emoji:"🫧"},
-    {name:"Alta Naisya Dzikri Airalbi",photo:"Alta.jpeg",kelas:"XI-7",ttl:"Samarinda, 23 Jun 2009",ig:"@alta.naisyaa",motto:"Living life to the fullest",role:"member",av:"A",color:"av-green",emoji:"🤠"},
-    {name:"Arsya Farany",photo:"Arsya.jpeg",kelas:"XI-3",ttl:"Samarinda, 28 Sep 2009",ig:"@arsyafarany86",motto:"Kita dilahirkan untuk menjadi nyata, bukan menjadi sempurna",role:"member",av:"A",color:"av-green",emoji:"🥹"},
-    {name:"Al Mayra Bilqis Rahmania",photo:"Mayra.jpeg",kelas:"XI-4",ttl:"Samarinda, 17 Mei 2009",ig:"@almayrab.r",motto:"Inovasi Tanpa Batas",role:"member",av:"A",color:"av-green",emoji:"💫"},
-    {name:"Ketut Samara Bunga Pratiwi Suraga",photo:"Samara.jpeg",kelas:"XI-6",ttl:"Sendawar, 03 Nov 2009",ig:"@samarafleur_",motto:"Happiness is made, not awarded. Create your own happiness and don't wait for it",role:"member",av:"K",color:"av-green",emoji:"🐰"},
-    {name:"Saskia Salsabila",photo:"Saskia.jpeg",kelas:"XI-2",ttl:"Samarinda, 15 Feb 2009",ig:"@mo0minsaa_",motto:"Long live all the magic we made-one day, we will be remembered",role:"member",av:"S",color:"av-green",emoji:"🌊"},
-    {name:"Azzahra Nabilla Sofian",photo:"Nabilla.jpeg",kelas:"XI-7",ttl:"Samarinda, 03 Des 2008",ig:"@answowowo",motto:"Tetaplah waras",role:"member",av:"A",color:"av-green",emoji:"👽"},
-    {name:"Rika Dwi Amelia Putri",photo:"Rika.jpeg",kelas:"XI-12",ttl:"Samarinda, 14 Feb 2009",ig:"@aameliaptri._",motto:"Born to shine",role:"member",av:"R",color:"av-green",emoji:"🤓"},
-    {name:"Fakhri Alwan Dhiya rana",photo:"Alwan .jpg",kelas:"XI-10",ttl:"Samarinda, 01 April 2009",ig:"@fkhrialwan_",motto:"Everything will be okay in the end. If it's not okay, it's not the end -John Lennon ",role:"member",av:"D",color:"av-green",emoji:"😍"},
-    {name:"Jasmine Fajarina Azzahra",photo:"Jasmine.jpg",kelas:"XI-4",ttl:"Samarinda, 13 November 2009",ig:"@jfae_tea",motto:"Kalau orang buat salah ke kita, ingat dulu kalau kita semua itu cuman manusia yang sering buat salah",role:"member",av:"D",color:"av-green",emoji:"😭"},
-    ]
 };
 
 function makeCard(m){
@@ -596,11 +548,8 @@ function makeCard(m){
 }
 
 function renderMembers(){
-  document.getElementById('grid-guru').innerHTML = memberData.guru.map(makeCard).join('');
   document.getElementById('grid-ketua-all').innerHTML = memberData.ketuaAll.map(makeCard).join('');
   document.getElementById('grid-web').innerHTML = memberData.web.map(makeCard).join('');
-  document.getElementById('grid-arduino').innerHTML = memberData.arduino.map(makeCard).join('');
-  document.getElementById('grid-deco').innerHTML = memberData.deco.map(makeCard).join('');
 }
 renderMembers();
 
